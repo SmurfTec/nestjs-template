@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>Reply to User</title>
+    <style>
+      body { font-family: Arial, sans-serif; } h1 { color: #333; } p {
+      margin-bottom: 10px; } blockquote { margin: 10px 0; padding: 10px;
+      border-left: 4px solid #ccc; background-color: #f9f9f9; } .footer {
+      margin-top: 30px; color: #777; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <h1>Reply to Your Inquiry: {{supportMessage}}</h1>
+
+    <p>Dear {{name}},</p>
+
+    <p>Thank you for reaching out to us. We have received your message and would
+      like to provide a response:</p>
+
+    <blockquote>{{replyMessage}}</blockquote>
+
+    <p>If you have any further questions or concerns, please feel free to reply
+      to this email. We are here to assist you.</p>
+
+    <div class='footer'>
+      <p>Best regards,</p>
+      <p>{{appName}} Team</p>
+    </div>
+  </body>
+</html>

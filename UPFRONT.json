@@ -1,0 +1,285 @@
+{
+  "url": "D:/Projects/Nodejs/upfront",
+  "tables": [
+    {
+      "name": "Users",
+      "properties": {
+        "email": {
+          "type": "varchar"
+        },
+        "password": {
+          "type": "varchar"
+        },
+        "signup_otp": {
+          "type": "int",
+          "nullable": true
+        },
+        "forget_email_otp": {
+          "type": "int",
+          "nullable": true
+        },
+        "signup_otp_expiry": {
+          "type": "timestamp",
+          "nullable": true
+        },
+        "forget_email_otp_expiry": {
+          "type": "timestamp",
+          "nullable": true
+        },
+        "fullname": {
+          "type": "varchar"
+        },
+        "agent_rera": {
+          "type": "varchar",
+          "nullable": true
+        },
+        "is_social_login": {
+          "type": "boolean",
+          "default": false
+        },
+        "is_email_verified": {
+          "type": "boolean",
+          "default": false
+        },
+        "upcoming_email": {
+          "type": "varchar",
+          "nullable": true
+        },
+        "upcoming_email_otp": {
+          "type": "int",
+          "nullable": true
+        },
+        "upcoming_email_otp_expiry": {
+          "type": "timestamp",
+          "nullable": true
+        },
+        "allow_notifications": {
+          "type": "boolean",
+          "default": true
+        },
+        "is_active": {
+          "type": "boolean",
+          "default": true
+        },
+        "last_login": {
+          "type": "timestamp",
+          "nullable": true
+        },
+        "hashRefreshToken": {
+          "type": "varchar",
+          "nullable": true
+        },
+        "is_banned": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "relations": {}
+    },
+    {
+      "name": "Profiles",
+      "properties": {
+        "phone": {
+          "type": "varchar",
+          "nullable": true
+        },
+        "upcoming_phone": {
+          "type": "varchar",
+          "nullable": true
+        },
+        "upcoming_phone_otp": {
+          "type": "int",
+          "nullable": true
+        },
+        "upcoming_phone_otp_expiry": {
+          "type": "timestamp",
+          "nullable": true
+        },
+        "document_front": {
+          "type": "varchar",
+          "nullable": true
+        },
+        "document_back": {
+          "type": "varchar",
+          "nullable": true
+        },
+        "photo": {
+          "type": "varchar",
+          "nullable": true
+        }
+      },
+      "relations": {
+        "user": {
+          "type": "OneToOne",
+          "referenceTable": "Users",
+          "reference": "id",
+          "required": true
+        }
+      }
+    },
+    {
+      "name": "CommissionRates",
+      "properties": {
+        "percentage": {
+          "type": "double precision",
+          "nullable": false
+        },
+        "amount": {
+          "type": "int",
+          "nullable": false
+        },
+        "from_day": {
+          "type": "int",
+          "nullable": false
+        },
+        "to_day": {
+          "type": "int",
+          "nullable": false
+        }
+      }
+    },
+    {
+      "name": "Deals",
+      "properties": {
+        "property_name": {
+          "type": "varchar"
+        },
+        "property_apartment": {
+          "type": "varchar"
+        },
+        "property_area": {
+          "type": "varchar"
+        },
+        "property_unit_sale_date": {
+          "type": "timestamp"
+        },
+        "developer_name": {
+          "type": "varchar"
+        },
+        "developer_commission": {
+          "type": "int"
+        },
+        "expected_commission_paydate": {
+          "type": "timestamp"
+        }
+      },
+      "relations": {
+        "deal": {
+          "type": "ManyToOne",
+          "referenceTable": "Wallets",
+          "reference": "id",
+          "required": true
+        }
+      }
+    },
+    {
+      "name": "DealAttachments",
+      "properties": {
+        "attachment": {
+          "type": "varchar"
+        },
+        "resource_id": {
+          "type": "varchar"
+        }
+      },
+      "relations": {
+        "deal": {
+          "type": "ManyToOne",
+          "referenceTable": "Deals",
+          "reference": "id",
+          "required": true
+        }
+      }
+    },
+    {
+      "name": "DealStatuses",
+      "properties": {
+        "name": {
+          "type": "varchar"
+        }
+      },
+      "relations": {
+        "deal": {
+          "type": "OneToMany",
+          "referenceTable": "Deals",
+          "reference": "id",
+          "required": true
+        }
+      }
+    },
+    {
+      "name": "Wallets",
+      "properties": {
+        "amount": {
+          "type": "int"
+        },
+        "bank_name": {
+          "type": "varchar"
+        },
+        "full_legal_name": {
+          "type": "varchar"
+        },
+        "account_number": {
+          "type": "varchar"
+        }
+      }
+    },
+    {
+      "name": "WalletStatuses",
+      "properties": {
+        "name": {
+          "type": "varchar"
+        }
+      },
+      "relations": {
+        "wallet": {
+          "type": "OneToMany",
+          "referenceTable": "Wallets",
+          "reference": "id",
+          "required": true
+        }
+      }
+    },
+    {
+      "name": "WalletTransactions",
+      "properties": {
+        "amount": {
+          "type": "int"
+        }
+      },
+      "relations": {
+        "wallet": {
+          "type": "ManyToOne",
+          "referenceTable": "Wallets",
+          "reference": "id",
+          "required": true
+        }
+      }
+    },
+    {
+      "name": "NotificationPreferences",
+      "properties": {
+        "category": {
+          "type": "varchar",
+          "nullable": false
+        },
+        "allow_email": {
+          "type": "boolean",
+          "default": false
+        },
+        "allow_push": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "relations": {
+        "user": {
+          "type": "ManyToOne",
+          "referenceTable": "Users",
+          "reference": "id",
+          "required": true
+        }
+      }
+    }
+  ]
+}

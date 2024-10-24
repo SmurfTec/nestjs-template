@@ -1,0 +1,30 @@
+import { AuthUserRoles } from './auth-user-roles.entity';
+import { AuthUserPermissions } from './auth-user-permissions.entity';
+export declare class Users {
+    id: number;
+    email: string;
+    password: string;
+    signup_otp: number;
+    forget_email_otp: number;
+    signup_otp_expiry: Date;
+    forget_email_otp_expiry: Date;
+    fullname: string;
+    agent_rera: string;
+    is_social_login: boolean;
+    is_email_verified: boolean;
+    is_phone_verified: boolean;
+    is_rere_verified: boolean;
+    is_face_verified: boolean;
+    upcoming_email: string;
+    upcoming_email_otp: number;
+    upcoming_email_otp_expiry: Date;
+    allow_notifications: boolean;
+    is_active: boolean;
+    last_login: Date;
+    hashRefreshToken: string;
+    is_banned: boolean;
+    auth_user_roles: AuthUserRoles[];
+    auth_user_permissions: AuthUserPermissions[];
+    created_on: Date;
+    updated_on: Date;
+}

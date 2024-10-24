@@ -1,0 +1,1 @@
+{"version":3,"file":"1679659495373-add-permission.js","sourceRoot":"","sources":["../../../../../database/migrations/1679659495373-add-permission.ts"],"names":[],"mappings":";;;AAEA,MAAa,0BAA0B;IAC9B,KAAK,CAAC,EAAE,CAAC,WAAwB;QACtC,MAAM,WAAW,CAAC,KAAK,CAAC;;SAEnB,CAAC,CAAC;IACT,CAAC;IAGM,KAAK,CAAC,IAAI,CAAC,WAAwB,IAAkB,CAAC;CAC9D;AATD,gEASC"}
