@@ -26,7 +26,7 @@ let EnvironmentConfigService = class EnvironmentConfigService {
         return this.configService.get('TEMP_DIRECTORY_PATH');
     }
     getAppName() {
-        return this.configService.get('UpFront');
+        return this.configService.get('APP_NAME');
     }
     getMinioEndPoint() {
         return this.configService.get('MINIO_END_POINT');

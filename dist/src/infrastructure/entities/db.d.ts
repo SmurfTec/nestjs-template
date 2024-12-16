@@ -1,13 +1,2 @@
-import { Users } from './user.entity';
-import { AuthPermissions } from './auth-permissions.entity';
-import { AuthRolePermissions } from './auth-role-permissions.entity';
-import { AuthRoles } from './auth-roles.entity';
-import { AuthUserPermissions } from './auth-user-permissions.entity';
-import { AuthUserRoles } from './auth-user-roles.entity';
-import { AppModules } from './app_module.entity';
-import { AppModulePermissions } from './app_module_permissions.entity';
-import { Profiles } from './profile.entity';
-import { Notifications } from './notification.entity';
-import { UserNotifications } from './usernotification.entity';
-declare const _default: (typeof Users | typeof AuthUserRoles | typeof AuthUserPermissions | typeof Notifications | typeof UserNotifications | typeof AppModules | typeof AppModulePermissions | typeof AuthPermissions | typeof AuthRolePermissions | typeof AuthRoles | typeof Profiles)[];
+declare const _default: any[];
 export default _default;

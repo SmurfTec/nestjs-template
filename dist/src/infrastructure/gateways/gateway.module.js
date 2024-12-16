@@ -8,7 +8,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GatewayModule = void 0;
 const common_1 = require("@nestjs/common");
-const menus_gateway_1 = require("./menus.gateway");
 const notification_gateway_1 = require("./notification.gateway");
 const usecase_module_1 = require("../../usecases/usecase.module");
 let GatewayModule = class GatewayModule {
@@ -16,8 +15,8 @@ let GatewayModule = class GatewayModule {
 GatewayModule = __decorate([
     (0, common_1.Module)({
         imports: [usecase_module_1.UseCaseModule],
-        providers: [menus_gateway_1.MenuGateway, notification_gateway_1.NotificationGateway],
-        exports: [menus_gateway_1.MenuGateway, notification_gateway_1.NotificationGateway],
+        providers: [notification_gateway_1.NotificationGateway],
+        exports: [notification_gateway_1.NotificationGateway],
     })
 ], GatewayModule);
 exports.GatewayModule = GatewayModule;

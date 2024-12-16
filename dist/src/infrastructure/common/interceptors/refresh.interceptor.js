@@ -14,28 +14,18 @@ const common_1 = require("@nestjs/common");
 const passport_1 = require("@nestjs/passport");
 const passport_local_1 = require("passport-local");
 const operators_1 = require("rxjs/operators");
-const login_usecases_1 = require("../../../usecases/auth/login.usecases");
 let RefreshInterceptor = class RefreshInterceptor extends (0, passport_1.PassportStrategy)(passport_local_1.Strategy, 'jwt-refresh-token') {
-    constructor(loginUsecaseProxy) {
+    constructor() {
         super();
-        this.loginUsecaseProxy = loginUsecaseProxy;
     }
     async intercept(context, next) {
-        var _a, _b;
         const httpContext = context.switchToHttp();
-        const request = httpContext.getRequest();
-        if ((request === null || request === void 0 ? void 0 : request.cookies) &&
-            !((_a = request.cookies) === null || _a === void 0 ? void 0 : _a.Authentication) &&
-            ((_b = request.cookies) === null || _b === void 0 ? void 0 : _b.Refresh)) {
-            const accessTokenCookie = await this.loginUsecaseProxy.getCookieWithJwtToken(request.user.username);
-            request.res.setHeader('Set-Cookie', accessTokenCookie);
-        }
         return next.handle().pipe((0, operators_1.map)((data) => data));
     }
 };
 RefreshInterceptor = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [login_usecases_1.LoginUseCases])
+    __metadata("design:paramtypes", [])
 ], RefreshInterceptor);
 exports.RefreshInterceptor = RefreshInterceptor;
 //# sourceMappingURL=refresh.interceptor.js.map

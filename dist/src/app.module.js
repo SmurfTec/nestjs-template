@@ -7,18 +7,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
-const cron_jobs_1 = require("./infrastructure/services/cron/cron-jobs");
+const rabbitmq_module_1 = require("./infrastructure/config/rabbitmq/rabbitmq.module");
 const common_1 = require("@nestjs/common");
 const typeorm_module_1 = require("./infrastructure/config/typeorm/typeorm.module");
 const controller_module_1 = require("./infrastructure/controllers/controller.module");
-const usecase_module_1 = require("./usecases/usecase.module");
 const bcrypt_module_1 = require("./infrastructure/services/bcrypt/bcrypt.module");
 const jwt_module_1 = require("./infrastructure/services/jwt/jwt.module");
-const local_strategy_1 = require("./infrastructure/common/strategies/local.strategy");
-const jwtRefresh_strategy_1 = require("./infrastructure/common/strategies/jwtRefresh.strategy");
-const jwt_strategy_1 = require("./infrastructure/common/strategies/jwt.strategy");
 const environment_config_module_1 = require("./infrastructure/config/environment-config/environment-config.module");
-const subscribers_module_1 = require("./infrastructure/common/subscribers/subscribers.module");
+const gateway_module_1 = require("./infrastructure/gateways/gateway.module");
 const serve_static_1 = require("@nestjs/serve-static");
 const path_1 = require("path");
 const email_module_1 = require("./infrastructure/services/emails/email.module");
@@ -26,6 +22,7 @@ const tasks_module_1 = require("./infrastructure/common/tasks-scheduling/tasks.m
 const notifications_module_1 = require("./infrastructure/services/notifications/notifications.module");
 const raw_body_middleware_1 = require("./middlewares/raw-body.middleware");
 const json_body_middleware_1 = require("./middlewares/json-body.middleware");
+const schedule_1 = require("@nestjs/schedule");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
@@ -47,23 +44,19 @@ AppModule = __decorate([
             serve_static_1.ServeStaticModule.forRoot({
                 rootPath: (0, path_1.join)(__dirname, '../..', 'uploads'),
             }),
+            gateway_module_1.GatewayModule,
+            rabbitmq_module_1.RabbitMQModule,
             typeorm_module_1.TypeOrmConfigModule,
             controller_module_1.ControllerModule,
             bcrypt_module_1.BcryptModule,
             jwt_module_1.JwtModule,
             bcrypt_module_1.BcryptModule,
             jwt_module_1.JwtModule,
-            usecase_module_1.UseCaseModule,
             environment_config_module_1.EnvironmentConfigModule,
-            subscribers_module_1.SubcriberModule,
+            schedule_1.ScheduleModule,
         ],
         controllers: [],
-        providers: [
-            local_strategy_1.LocalStrategy,
-            jwtRefresh_strategy_1.JwtRefreshTokenStrategy,
-            jwt_strategy_1.JwtStrategy,
-            cron_jobs_1.MyCronJob,
-        ],
+        providers: [],
     })
 ], AppModule);
 exports.AppModule = AppModule;

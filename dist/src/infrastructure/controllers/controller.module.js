@@ -9,18 +9,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ControllerModule = void 0;
 const multer_1 = require("multer");
 const common_1 = require("@nestjs/common");
-const usecase_module_1 = require("../../usecases/usecase.module");
 const myLogger_1 = require("../common/logger/myLogger");
-const auth_controller_1 = require("./auth/auth.controller");
-const authorization_controller_1 = require("./auth/authorization.controller");
-const app_module_controller_1 = require("./app_module/app_module.controller");
-const app_module_permissions_controller_1 = require("./app_module_permissions/app_module_permissions.controller");
-const user_controller_1 = require("./user/user.controller");
-const profile_controller_1 = require("./profile/profile.controller");
-const notifications_controller_1 = require("./notification/notifications.controller");
-const user_notifications_controller_1 = require("./usernotification/user-notifications.controller");
 const platform_express_1 = require("@nestjs/platform-express");
 const email_module_1 = require("../services/emails/email.module");
+const usecase_module_1 = require("../../usecases/usecase.module");
 let ControllerModule = class ControllerModule {
 };
 ControllerModule = __decorate([
@@ -49,16 +41,7 @@ ControllerModule = __decorate([
             }),
             email_module_1.EmailModule,
         ],
-        controllers: [
-            user_notifications_controller_1.UserNotificationController,
-            app_module_controller_1.AppModuleController,
-            app_module_permissions_controller_1.AppModulePermissionController,
-            auth_controller_1.AuthController,
-            authorization_controller_1.AuthorizationController,
-            user_controller_1.UserController,
-            profile_controller_1.ProfileController,
-            notifications_controller_1.NotificationController,
-        ],
+        controllers: [],
         providers: [myLogger_1.MyLogger, email_module_1.EmailModule],
     })
 ], ControllerModule);

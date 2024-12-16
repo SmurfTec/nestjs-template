@@ -8,17 +8,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PermissionsUseCases = void 0;
 const common_1 = require("@nestjs/common");
-const cache_service_1 = require("../../infrastructure/services/cache.service");
-const auth_user_permissions_repository_1 = require("../../infrastructure/repository/auth-user-permissions.repository");
-const auth_user_roles_repository_1 = require("../../infrastructure/repository/auth-user-roles.repository");
 let PermissionsUseCases = class PermissionsUseCases {
-    constructor(authUserRolesRepository, authUserPermissionsRepository, cacheSerivce) {
+    constructor(authUserRolesRepository, authUserPermissionsRepository) {
         this.authUserRolesRepository = authUserRolesRepository;
         this.authUserPermissionsRepository = authUserPermissionsRepository;
-        this.cacheSerivce = cacheSerivce;
     }
     async getUserPermissionsByRole(userId) {
         return await this.authUserRolesRepository.getUserRolePermissions(userId);
@@ -43,24 +40,10 @@ let PermissionsUseCases = class PermissionsUseCases {
         });
         return { permissions: Array.from(set), roles: Array.from(roleSet) };
     }
-    async getOrSetUserPermissionsFromCache(userId) {
-        const key = userId + '.permissions';
-        if (await this.cacheSerivce.has(key)) {
-            await this.cacheSerivce.getKeysByPattern(key);
-            return await this.cacheSerivce.hmget(key);
-        }
-        else {
-            const { permissions, roles } = await this.getUserPermissionsAndRoles(userId);
-            await this.cacheSerivce.hmset(key, { permissions, roles }, 60 * 60 * 24 * 7);
-            return { permissions, roles };
-        }
-    }
 };
 PermissionsUseCases = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [auth_user_roles_repository_1.AuthUserRolesRepository,
-        auth_user_permissions_repository_1.AuthUserPermissionsRepository,
-        cache_service_1.CacheService])
+    __metadata("design:paramtypes", [typeof (_a = typeof AuthUserRolesRepository !== "undefined" && AuthUserRolesRepository) === "function" ? _a : Object, typeof (_b = typeof AuthUserPermissionsRepository !== "undefined" && AuthUserPermissionsRepository) === "function" ? _b : Object])
 ], PermissionsUseCases);
 exports.PermissionsUseCases = PermissionsUseCases;
 //# sourceMappingURL=permission.usecases.js.map

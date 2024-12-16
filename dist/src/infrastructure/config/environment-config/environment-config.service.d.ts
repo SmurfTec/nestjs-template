@@ -1,9 +1,7 @@
 import { ConfigService } from '@nestjs/config';
-import { RabbitMQConfig } from 'src/domain/config/rabbitmq.interface';
-import { RedisConfig } from 'src/domain/config/redis.interface';
 import { DatabaseConfig } from '../../../domain/config/database.interface';
 import { JWTConfig } from '../../../domain/config/jwt.interface';
-export declare class EnvironmentConfigService implements DatabaseConfig, JWTConfig, RabbitMQConfig, RedisConfig {
+export declare class EnvironmentConfigService implements DatabaseConfig, JWTConfig {
     private configService;
     constructor(configService: ConfigService);
     getShipstationAuth(): string;

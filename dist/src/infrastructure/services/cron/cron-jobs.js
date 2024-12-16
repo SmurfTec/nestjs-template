@@ -13,10 +13,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MyCronJob = void 0;
 const common_1 = require("@nestjs/common");
 const schedule_1 = require("@nestjs/schedule");
-const notifications_usecases_1 = require("../../../usecases/notification/notifications.usecases");
 let MyCronJob = MyCronJob_1 = class MyCronJob {
-    constructor(notificationsUseCases) {
-        this.notificationsUseCases = notificationsUseCases;
+    constructor() {
         this.logger = new common_1.Logger(MyCronJob_1.name);
     }
     async handleCron() { }
@@ -29,7 +27,7 @@ __decorate([
 ], MyCronJob.prototype, "handleCron", null);
 MyCronJob = MyCronJob_1 = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [notifications_usecases_1.NotificationsUseCases])
+    __metadata("design:paramtypes", [])
 ], MyCronJob);
 exports.MyCronJob = MyCronJob;
 //# sourceMappingURL=cron-jobs.js.map

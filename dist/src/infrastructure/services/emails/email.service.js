@@ -22,7 +22,7 @@ let MailService = class MailService {
     async sendUserConfirmation(email, code) {
         await this.mailerService.sendMail({
             to: email,
-            subject: 'Welcome To Upfront Please Confirm your Email',
+            subject: 'Welcome  Confirm your Email',
             template: 'src/infrastructure/services/emails/templates/confirmation.hbs',
             context: {
                 code,

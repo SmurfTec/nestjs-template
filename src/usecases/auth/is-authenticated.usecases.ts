@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import {
-  UserModel,
-  UserWithoutPassword,
-} from '../../../../../upfront/src/domain/models/user';
+// import {
+//   UserModel,
+//   UserWithoutPassword,
+// } from '../../../../../upfront/src/domain/models/user';
 
 @Injectable()
 export class IsAuthenticatedUseCases {
