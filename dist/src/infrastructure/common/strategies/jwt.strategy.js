@@ -12,8 +12,8 @@ const passport_1 = require("@nestjs/passport");
 const common_1 = require("@nestjs/common");
 let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
 };
-JwtStrategy = __decorate([
+exports.JwtStrategy = JwtStrategy;
+exports.JwtStrategy = JwtStrategy = __decorate([
     (0, common_1.Injectable)()
 ], JwtStrategy);
-exports.JwtStrategy = JwtStrategy;
 //# sourceMappingURL=jwt.strategy.js.map

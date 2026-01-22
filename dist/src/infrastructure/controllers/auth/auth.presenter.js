@@ -13,9 +13,9 @@ exports.IsAuthPresenter = void 0;
 const swagger_1 = require("@nestjs/swagger");
 class IsAuthPresenter {
 }
+exports.IsAuthPresenter = IsAuthPresenter;
 __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], IsAuthPresenter.prototype, "email", void 0);
-exports.IsAuthPresenter = IsAuthPresenter;
 //# sourceMappingURL=auth.presenter.js.map

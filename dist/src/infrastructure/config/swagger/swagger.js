@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createDocument = void 0;
+exports.createDocument = createDocument;
 const swagger_1 = require("@nestjs/swagger");
 const swagger_config_1 = require("./swagger.config");
 const response_interceptor_1 = require("../../common/interceptors/response.interceptor");
@@ -21,5 +21,4 @@ function createDocument(app) {
         deepScanRoutes: true,
     });
 }
-exports.createDocument = createDocument;
 //# sourceMappingURL=swagger.js.map

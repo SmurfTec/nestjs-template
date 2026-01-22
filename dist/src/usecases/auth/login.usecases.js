@@ -10,8 +10,8 @@ exports.LoginUseCases = void 0;
 const common_1 = require("@nestjs/common");
 let LoginUseCases = class LoginUseCases {
 };
-LoginUseCases = __decorate([
+exports.LoginUseCases = LoginUseCases;
+exports.LoginUseCases = LoginUseCases = __decorate([
     (0, common_1.Injectable)()
 ], LoginUseCases);
-exports.LoginUseCases = LoginUseCases;
 //# sourceMappingURL=login.usecases.js.map

@@ -45,9 +45,9 @@ let AllExceptionsFilter = class AllExceptionsFilter {
         httpAdapter.reply(ctx.getResponse(), responseBody, status);
     }
 };
-AllExceptionsFilter = __decorate([
+exports.AllExceptionsFilter = AllExceptionsFilter;
+exports.AllExceptionsFilter = AllExceptionsFilter = __decorate([
     (0, common_1.Catch)(),
     __metadata("design:paramtypes", [core_1.HttpAdapterHost])
 ], AllExceptionsFilter);
-exports.AllExceptionsFilter = AllExceptionsFilter;
 //# sourceMappingURL=global-exception-handler.js.map

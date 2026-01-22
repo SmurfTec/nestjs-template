@@ -1,5 +1,4 @@
-import { Strategy } from 'passport-jwt';
-declare const JwtRefreshTokenStrategy_base: new (...args: any[]) => Strategy;
+declare const JwtRefreshTokenStrategy_base: any;
 export declare class JwtRefreshTokenStrategy extends JwtRefreshTokenStrategy_base {
 }
 export {};

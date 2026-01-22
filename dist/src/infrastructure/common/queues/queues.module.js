@@ -17,7 +17,8 @@ const queues_service_1 = require("./queues.service");
 const configService = new environment_config_service_1.EnvironmentConfigService(new config_1.ConfigService());
 let QueueModule = class QueueModule {
 };
-QueueModule = __decorate([
+exports.QueueModule = QueueModule;
+exports.QueueModule = QueueModule = __decorate([
     (0, common_1.Module)({
         imports: [
             email_module_1.EmailModule,
@@ -35,5 +36,4 @@ QueueModule = __decorate([
         providers: [queues_service_1.QueueService, queues_consumer_1.EmailConsumer],
     })
 ], QueueModule);
-exports.QueueModule = QueueModule;
 //# sourceMappingURL=queues.module.js.map

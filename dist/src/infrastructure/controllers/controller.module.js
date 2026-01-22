@@ -15,7 +15,8 @@ const email_module_1 = require("../services/emails/email.module");
 const usecase_module_1 = require("../../usecases/usecase.module");
 let ControllerModule = class ControllerModule {
 };
-ControllerModule = __decorate([
+exports.ControllerModule = ControllerModule;
+exports.ControllerModule = ControllerModule = __decorate([
     (0, common_1.Module)({
         imports: [
             usecase_module_1.UseCaseModule,
@@ -45,5 +46,4 @@ ControllerModule = __decorate([
         providers: [myLogger_1.MyLogger, email_module_1.EmailModule],
     })
 ], ControllerModule);
-exports.ControllerModule = ControllerModule;
 //# sourceMappingURL=controller.module.js.map

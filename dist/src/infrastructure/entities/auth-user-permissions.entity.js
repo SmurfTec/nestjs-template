@@ -15,6 +15,7 @@ const auth_permissions_entity_1 = require("./auth-permissions.entity");
 const user_entity_1 = require("./user.entity");
 let AuthUserPermissions = class AuthUserPermissions {
 };
+exports.AuthUserPermissions = AuthUserPermissions;
 __decorate([
     (0, typeorm_1.PrimaryColumn)({ type: 'varchar', length: 50 }),
     (0, typeorm_1.ManyToOne)(() => auth_permissions_entity_1.AuthPermissions, (authPermission) => authPermission.auth_user_permissions),
@@ -39,8 +40,7 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'int8' }),
     __metadata("design:type", Number)
 ], AuthUserPermissions.prototype, "created_by", void 0);
-AuthUserPermissions = __decorate([
+exports.AuthUserPermissions = AuthUserPermissions = __decorate([
     (0, typeorm_1.Entity)()
 ], AuthUserPermissions);
-exports.AuthUserPermissions = AuthUserPermissions;
 //# sourceMappingURL=auth-user-permissions.entity.js.map

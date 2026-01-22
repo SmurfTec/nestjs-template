@@ -12,12 +12,12 @@ const notification_gateway_1 = require("./notification.gateway");
 const usecase_module_1 = require("../../usecases/usecase.module");
 let GatewayModule = class GatewayModule {
 };
-GatewayModule = __decorate([
+exports.GatewayModule = GatewayModule;
+exports.GatewayModule = GatewayModule = __decorate([
     (0, common_1.Module)({
         imports: [usecase_module_1.UseCaseModule],
         providers: [notification_gateway_1.NotificationGateway],
         exports: [notification_gateway_1.NotificationGateway],
     })
 ], GatewayModule);
-exports.GatewayModule = GatewayModule;
 //# sourceMappingURL=gateway.module.js.map

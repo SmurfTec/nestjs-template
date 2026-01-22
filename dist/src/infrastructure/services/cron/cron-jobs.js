@@ -19,15 +19,15 @@ let MyCronJob = MyCronJob_1 = class MyCronJob {
     }
     async handleCron() { }
 };
+exports.MyCronJob = MyCronJob;
 __decorate([
     (0, schedule_1.Cron)('0 0 * * *'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], MyCronJob.prototype, "handleCron", null);
-MyCronJob = MyCronJob_1 = __decorate([
+exports.MyCronJob = MyCronJob = MyCronJob_1 = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [])
 ], MyCronJob);
-exports.MyCronJob = MyCronJob;
 //# sourceMappingURL=cron-jobs.js.map

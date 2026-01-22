@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const notifications_enums_1 = require("../common/enums/notifications.enums");
 let Notifications = class Notifications {
 };
+exports.Notifications = Notifications;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int4' }),
     __metadata("design:type", Number)
@@ -58,8 +59,7 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', default: null }),
     __metadata("design:type", String)
 ], Notifications.prototype, "from_user_name", void 0);
-Notifications = __decorate([
+exports.Notifications = Notifications = __decorate([
     (0, typeorm_1.Entity)()
 ], Notifications);
-exports.Notifications = Notifications;
 //# sourceMappingURL=notifications.entity.js.map

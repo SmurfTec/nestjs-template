@@ -17,6 +17,7 @@ class AuthPermissionDto {
         this.app_module = null;
     }
 }
+exports.AuthPermissionDto = AuthPermissionDto;
 __decorate([
     (0, swagger_1.ApiProperty)({ required: true }),
     (0, class_validator_1.IsNotEmpty)(),
@@ -35,5 +36,4 @@ __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], AuthPermissionDto.prototype, "app_module", void 0);
-exports.AuthPermissionDto = AuthPermissionDto;
 //# sourceMappingURL=auth-permission.dto.js.map

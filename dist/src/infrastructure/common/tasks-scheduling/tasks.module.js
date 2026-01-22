@@ -12,11 +12,11 @@ const schedule_1 = require("@nestjs/schedule");
 const tasks_service_1 = require("./tasks.service");
 let TasksModule = class TasksModule {
 };
-TasksModule = __decorate([
+exports.TasksModule = TasksModule;
+exports.TasksModule = TasksModule = __decorate([
     (0, common_1.Module)({
         imports: [schedule_1.ScheduleModule.forRoot()],
         providers: [tasks_service_1.TasksService],
     })
 ], TasksModule);
-exports.TasksModule = TasksModule;
 //# sourceMappingURL=tasks.module.js.map

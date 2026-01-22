@@ -13,7 +13,8 @@ const environment_config_module_1 = require("../environment-config/environment-c
 const typeorm_config_1 = require("./typeorm.config");
 let TypeOrmConfigModule = class TypeOrmConfigModule {
 };
-TypeOrmConfigModule = __decorate([
+exports.TypeOrmConfigModule = TypeOrmConfigModule;
+exports.TypeOrmConfigModule = TypeOrmConfigModule = __decorate([
     (0, common_1.Module)({
         imports: [
             typeorm_1.TypeOrmModule.forRoot(typeorm_config_1.databaseConfigurations),
@@ -22,5 +23,4 @@ TypeOrmConfigModule = __decorate([
         exports: [typeorm_1.TypeOrmModule.forRoot(typeorm_config_1.databaseConfigurations)],
     })
 ], TypeOrmConfigModule);
-exports.TypeOrmConfigModule = TypeOrmConfigModule;
 //# sourceMappingURL=typeorm.module.js.map

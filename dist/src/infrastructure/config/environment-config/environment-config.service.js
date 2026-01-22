@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EnvironmentConfigService = void 0;
 const common_1 = require("@nestjs/common");
@@ -197,9 +198,9 @@ let EnvironmentConfigService = class EnvironmentConfigService {
         return false;
     }
 };
-EnvironmentConfigService = __decorate([
-    (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [config_1.ConfigService])
-], EnvironmentConfigService);
 exports.EnvironmentConfigService = EnvironmentConfigService;
+exports.EnvironmentConfigService = EnvironmentConfigService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [typeof (_a = typeof config_1.ConfigService !== "undefined" && config_1.ConfigService) === "function" ? _a : Object])
+], EnvironmentConfigService);
 //# sourceMappingURL=environment-config.service.js.map

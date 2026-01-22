@@ -28,9 +28,9 @@ let PermissionGuard = class PermissionGuard {
         return permissions.some((permission) => permission === requiredPermission);
     }
 };
-PermissionGuard = __decorate([
+exports.PermissionGuard = PermissionGuard;
+exports.PermissionGuard = PermissionGuard = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [core_1.Reflector])
 ], PermissionGuard);
-exports.PermissionGuard = PermissionGuard;
 //# sourceMappingURL=permission.guard.js.map

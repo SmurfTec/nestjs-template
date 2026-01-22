@@ -14,8 +14,8 @@ let RawBodyMiddleware = class RawBodyMiddleware {
         bodyParser.raw({ type: '*/*' })(req, res, next);
     }
 };
-RawBodyMiddleware = __decorate([
+exports.RawBodyMiddleware = RawBodyMiddleware;
+exports.RawBodyMiddleware = RawBodyMiddleware = __decorate([
     (0, common_1.Injectable)()
 ], RawBodyMiddleware);
-exports.RawBodyMiddleware = RawBodyMiddleware;
 //# sourceMappingURL=raw-body.middleware.js.map

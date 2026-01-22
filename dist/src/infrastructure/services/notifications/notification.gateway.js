@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotifcationGateway = void 0;
 const websockets_1 = require("@nestjs/websockets");
@@ -23,9 +24,10 @@ let NotifcationGateway = class NotifcationGateway {
     onEvent(data, client) {
     }
 };
+exports.NotifcationGateway = NotifcationGateway;
 __decorate([
     (0, websockets_1.WebSocketServer)(),
-    __metadata("design:type", socket_io_1.Server)
+    __metadata("design:type", typeof (_a = typeof socket_io_1.Server !== "undefined" && socket_io_1.Server) === "function" ? _a : Object)
 ], NotifcationGateway.prototype, "server", void 0);
 __decorate([
     (0, websockets_1.SubscribeMessage)('notifications'),
@@ -35,12 +37,11 @@ __decorate([
     __metadata("design:paramtypes", [Object, net_1.Socket]),
     __metadata("design:returntype", Object)
 ], NotifcationGateway.prototype, "onEvent", null);
-NotifcationGateway = __decorate([
+exports.NotifcationGateway = NotifcationGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({
         cors: {
             origin: '*',
         },
     })
 ], NotifcationGateway);
-exports.NotifcationGateway = NotifcationGateway;
 //# sourceMappingURL=notification.gateway.js.map

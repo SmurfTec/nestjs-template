@@ -12,12 +12,12 @@ const email_config_1 = require("./email.config");
 const email_service_1 = require("./email.service");
 let EmailModule = class EmailModule {
 };
-EmailModule = __decorate([
+exports.EmailModule = EmailModule;
+exports.EmailModule = EmailModule = __decorate([
     (0, common_1.Module)({
         imports: [email_config_1.mailConfigurations],
         providers: [email_service_1.MailService],
         exports: [email_service_1.MailService],
     })
 ], EmailModule);
-exports.EmailModule = EmailModule;
 //# sourceMappingURL=email.module.js.map

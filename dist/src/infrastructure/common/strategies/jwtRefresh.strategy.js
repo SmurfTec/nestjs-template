@@ -12,8 +12,8 @@ const passport_1 = require("@nestjs/passport");
 const common_1 = require("@nestjs/common");
 let JwtRefreshTokenStrategy = class JwtRefreshTokenStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy, 'jwt-refresh-token') {
 };
-JwtRefreshTokenStrategy = __decorate([
+exports.JwtRefreshTokenStrategy = JwtRefreshTokenStrategy;
+exports.JwtRefreshTokenStrategy = JwtRefreshTokenStrategy = __decorate([
     (0, common_1.Injectable)()
 ], JwtRefreshTokenStrategy);
-exports.JwtRefreshTokenStrategy = JwtRefreshTokenStrategy;
 //# sourceMappingURL=jwtRefresh.strategy.js.map

@@ -16,7 +16,8 @@ const clientDynamicModule = (() => {
 })();
 let RabbitMQModule = class RabbitMQModule {
 };
-RabbitMQModule = __decorate([
+exports.RabbitMQModule = RabbitMQModule;
+exports.RabbitMQModule = RabbitMQModule = __decorate([
     (0, common_1.Module)({
         imports: [clientDynamicModule, environment_config_module_1.EnvironmentConfigModule],
         controllers: [],
@@ -24,5 +25,4 @@ RabbitMQModule = __decorate([
         exports: [clientDynamicModule],
     })
 ], RabbitMQModule);
-exports.RabbitMQModule = RabbitMQModule;
 //# sourceMappingURL=rabbitmq.module.js.map

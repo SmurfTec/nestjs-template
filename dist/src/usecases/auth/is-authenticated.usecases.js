@@ -10,8 +10,8 @@ exports.IsAuthenticatedUseCases = void 0;
 const common_1 = require("@nestjs/common");
 let IsAuthenticatedUseCases = class IsAuthenticatedUseCases {
 };
-IsAuthenticatedUseCases = __decorate([
+exports.IsAuthenticatedUseCases = IsAuthenticatedUseCases;
+exports.IsAuthenticatedUseCases = IsAuthenticatedUseCases = __decorate([
     (0, common_1.Injectable)()
 ], IsAuthenticatedUseCases);
-exports.IsAuthenticatedUseCases = IsAuthenticatedUseCases;
 //# sourceMappingURL=is-authenticated.usecases.js.map

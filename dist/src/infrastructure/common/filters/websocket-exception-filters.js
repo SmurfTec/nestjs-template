@@ -20,8 +20,8 @@ let AllExceptionsSocketFilter = class AllExceptionsSocketFilter extends websocke
         client.disconnect();
     }
 };
-AllExceptionsSocketFilter = __decorate([
+exports.AllExceptionsSocketFilter = AllExceptionsSocketFilter;
+exports.AllExceptionsSocketFilter = AllExceptionsSocketFilter = __decorate([
     (0, common_1.Catch)()
 ], AllExceptionsSocketFilter);
-exports.AllExceptionsSocketFilter = AllExceptionsSocketFilter;
 //# sourceMappingURL=websocket-exception-filters.js.map

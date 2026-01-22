@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const app_module_permissions_entity_1 = require("./app_module_permissions.entity");
 let AppModules = class AppModules {
 };
+exports.AppModules = AppModules;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
@@ -38,8 +39,7 @@ __decorate([
     (0, typeorm_1.UpdateDateColumn)({ type: 'date' }),
     __metadata("design:type", Date)
 ], AppModules.prototype, "updated_on", void 0);
-AppModules = __decorate([
+exports.AppModules = AppModules = __decorate([
     (0, typeorm_1.Entity)()
 ], AppModules);
-exports.AppModules = AppModules;
 //# sourceMappingURL=app_module.entity.js.map

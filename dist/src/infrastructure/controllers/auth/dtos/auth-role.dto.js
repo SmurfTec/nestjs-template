@@ -14,6 +14,7 @@ const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class AuthRoleDto {
 }
+exports.AuthRoleDto = AuthRoleDto;
 __decorate([
     (0, swagger_1.ApiProperty)({ required: true }),
     (0, class_validator_1.IsNotEmpty)(),
@@ -38,5 +39,4 @@ __decorate([
     (0, class_validator_1.IsArray)(),
     __metadata("design:type", Array)
 ], AuthRoleDto.prototype, "permissions", void 0);
-exports.AuthRoleDto = AuthRoleDto;
 //# sourceMappingURL=auth-role.dto.js.map

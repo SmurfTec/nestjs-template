@@ -16,8 +16,8 @@ let LogoutUseCases = class LogoutUseCases {
         ];
     }
 };
-LogoutUseCases = __decorate([
+exports.LogoutUseCases = LogoutUseCases;
+exports.LogoutUseCases = LogoutUseCases = __decorate([
     (0, common_1.Injectable)()
 ], LogoutUseCases);
-exports.LogoutUseCases = LogoutUseCases;
 //# sourceMappingURL=logout.usecases.js.map

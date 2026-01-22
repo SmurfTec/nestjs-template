@@ -20,8 +20,8 @@ let BcryptService = class BcryptService {
         return await bcrypt.compare(password, hashPassword);
     }
 };
-BcryptService = __decorate([
+exports.BcryptService = BcryptService;
+exports.BcryptService = BcryptService = __decorate([
     (0, common_1.Injectable)()
 ], BcryptService);
-exports.BcryptService = BcryptService;
 //# sourceMappingURL=bcrypt.service.js.map

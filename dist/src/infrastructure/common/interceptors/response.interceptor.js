@@ -15,6 +15,7 @@ const swagger_1 = require("@nestjs/swagger");
 const operators_1 = require("rxjs/operators");
 class ResponseFormat {
 }
+exports.ResponseFormat = ResponseFormat;
 __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Boolean)
@@ -31,7 +32,6 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], ResponseFormat.prototype, "method", void 0);
-exports.ResponseFormat = ResponseFormat;
 let ResponseInterceptor = class ResponseInterceptor {
     intercept(context, next) {
         const now = Date.now();
@@ -46,8 +46,8 @@ let ResponseInterceptor = class ResponseInterceptor {
         })));
     }
 };
-ResponseInterceptor = __decorate([
+exports.ResponseInterceptor = ResponseInterceptor;
+exports.ResponseInterceptor = ResponseInterceptor = __decorate([
     (0, common_1.Injectable)()
 ], ResponseInterceptor);
-exports.ResponseInterceptor = ResponseInterceptor;
 //# sourceMappingURL=response.interceptor.js.map

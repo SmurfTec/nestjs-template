@@ -5,6 +5,6 @@ var notificationEnums;
 (function (notificationEnums) {
     notificationEnums["SELECTIVE"] = "SELECTIVE";
     notificationEnums["ALL"] = "ALL";
-})(notificationEnums = exports.notificationEnums || (exports.notificationEnums = {}));
+})(notificationEnums || (exports.notificationEnums = notificationEnums = {}));
 exports.notificationEnumsArray = ['SELECTIVE', 'ALL'];
 //# sourceMappingURL=notifications.enums.js.map

@@ -15,6 +15,7 @@ const app_module_entity_1 = require("./app_module.entity");
 const auth_permissions_entity_1 = require("./auth-permissions.entity");
 let AppModulePermissions = class AppModulePermissions {
 };
+exports.AppModulePermissions = AppModulePermissions;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
@@ -37,8 +38,7 @@ __decorate([
     (0, typeorm_1.UpdateDateColumn)({ type: 'date' }),
     __metadata("design:type", Date)
 ], AppModulePermissions.prototype, "updated_on", void 0);
-AppModulePermissions = __decorate([
+exports.AppModulePermissions = AppModulePermissions = __decorate([
     (0, typeorm_1.Entity)()
 ], AppModulePermissions);
-exports.AppModulePermissions = AppModulePermissions;
 //# sourceMappingURL=app_module_permissions.entity.js.map

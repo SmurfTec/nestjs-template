@@ -1,5 +1,4 @@
-import { Strategy } from 'passport-local';
-declare const LocalStrategy_base: new (...args: any[]) => Strategy;
+declare const LocalStrategy_base: any;
 export declare class LocalStrategy extends LocalStrategy_base {
 }
 export {};

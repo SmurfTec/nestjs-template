@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const user_entity_1 = require("./user.entity");
 let Notifications = class Notifications {
 };
+exports.Notifications = Notifications;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int4' }),
     __metadata("design:type", Number)
@@ -55,8 +56,7 @@ __decorate([
     (0, typeorm_1.UpdateDateColumn)({ type: 'timestamp' }),
     __metadata("design:type", Date)
 ], Notifications.prototype, "updated_on", void 0);
-Notifications = __decorate([
+exports.Notifications = Notifications = __decorate([
     (0, typeorm_1.Entity)()
 ], Notifications);
-exports.Notifications = Notifications;
 //# sourceMappingURL=notification.entity.js.map

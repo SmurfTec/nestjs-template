@@ -17,6 +17,7 @@ class NestedAuthUserPermissionDto {
         this.is_allow = true;
     }
 }
+exports.NestedAuthUserPermissionDto = NestedAuthUserPermissionDto;
 __decorate([
     (0, swagger_1.ApiProperty)({ required: true }),
     (0, class_validator_1.IsNotEmpty)(),
@@ -28,13 +29,12 @@ __decorate([
     (0, class_validator_1.IsBoolean)(),
     __metadata("design:type", Object)
 ], NestedAuthUserPermissionDto.prototype, "is_allow", void 0);
-exports.NestedAuthUserPermissionDto = NestedAuthUserPermissionDto;
 class AuthUserPermissionsDto {
 }
+exports.AuthUserPermissionsDto = AuthUserPermissionsDto;
 __decorate([
     (0, swagger_1.ApiProperty)({ required: true }),
     (0, class_validator_1.IsArray)(),
     __metadata("design:type", Array)
 ], AuthUserPermissionsDto.prototype, "permissions", void 0);
-exports.AuthUserPermissionsDto = AuthUserPermissionsDto;
 //# sourceMappingURL=auth-user-permissions.dto.js.map

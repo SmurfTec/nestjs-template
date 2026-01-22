@@ -12,11 +12,11 @@ const jwt_1 = require("@nestjs/jwt");
 const jwt_service_1 = require("./jwt.service");
 let JwtModule = class JwtModule {
 };
-JwtModule = __decorate([
+exports.JwtModule = JwtModule;
+exports.JwtModule = JwtModule = __decorate([
     (0, common_1.Module)({
         providers: [jwt_service_1.JwtTokenService, jwt_1.JwtService],
         exports: [jwt_service_1.JwtTokenService, jwt_1.JwtService],
     })
 ], JwtModule);
-exports.JwtModule = JwtModule;
 //# sourceMappingURL=jwt.module.js.map

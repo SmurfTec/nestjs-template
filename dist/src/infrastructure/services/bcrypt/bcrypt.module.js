@@ -11,11 +11,11 @@ const common_1 = require("@nestjs/common");
 const bcrypt_service_1 = require("./bcrypt.service");
 let BcryptModule = class BcryptModule {
 };
-BcryptModule = __decorate([
+exports.BcryptModule = BcryptModule;
+exports.BcryptModule = BcryptModule = __decorate([
     (0, common_1.Module)({
         providers: [bcrypt_service_1.BcryptService],
         exports: [bcrypt_service_1.BcryptService],
     })
 ], BcryptModule);
-exports.BcryptModule = BcryptModule;
 //# sourceMappingURL=bcrypt.module.js.map

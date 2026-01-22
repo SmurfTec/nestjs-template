@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const user_entity_1 = require("./user.entity");
 let Profiles = class Profiles {
 };
+exports.Profiles = Profiles;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int4' }),
     __metadata("design:type", Number)
@@ -67,8 +68,7 @@ __decorate([
     (0, typeorm_1.UpdateDateColumn)({ type: 'timestamp' }),
     __metadata("design:type", Date)
 ], Profiles.prototype, "updated_on", void 0);
-Profiles = __decorate([
+exports.Profiles = Profiles = __decorate([
     (0, typeorm_1.Entity)()
 ], Profiles);
-exports.Profiles = Profiles;
 //# sourceMappingURL=profile.entity.js.map

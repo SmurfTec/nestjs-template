@@ -11,10 +11,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.QueueService = void 0;
 const bull_1 = require("@nestjs/bull");
 const common_1 = require("@nestjs/common");
+const bull_2 = require("bull");
 let QueueService = class QueueService {
     constructor(emailQueue) {
         this.emailQueue = emailQueue;
@@ -27,10 +29,10 @@ let QueueService = class QueueService {
         });
     }
 };
-QueueService = __decorate([
+exports.QueueService = QueueService;
+exports.QueueService = QueueService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, bull_1.InjectQueue)('emails')),
-    __metadata("design:paramtypes", [Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof bull_2.Queue !== "undefined" && bull_2.Queue) === "function" ? _a : Object])
 ], QueueService);
-exports.QueueService = QueueService;
 //# sourceMappingURL=queues.service.js.map

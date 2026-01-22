@@ -11,8 +11,8 @@ const common_1 = require("@nestjs/common");
 const passport_1 = require("@nestjs/passport");
 let LoginGuard = class LoginGuard extends (0, passport_1.AuthGuard)('local') {
 };
-LoginGuard = __decorate([
+exports.LoginGuard = LoginGuard;
+exports.LoginGuard = LoginGuard = __decorate([
     (0, common_1.Injectable)()
 ], LoginGuard);
-exports.LoginGuard = LoginGuard;
 //# sourceMappingURL=login.guard.js.map

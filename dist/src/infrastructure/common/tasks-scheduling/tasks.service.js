@@ -20,14 +20,14 @@ let TasksService = TasksService_1 = class TasksService {
     handleCron() {
     }
 };
+exports.TasksService = TasksService;
 __decorate([
     (0, schedule_1.Cron)(schedule_1.CronExpression.EVERY_30_SECONDS),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], TasksService.prototype, "handleCron", null);
-TasksService = TasksService_1 = __decorate([
+exports.TasksService = TasksService = TasksService_1 = __decorate([
     (0, common_1.Injectable)()
 ], TasksService);
-exports.TasksService = TasksService;
 //# sourceMappingURL=tasks.service.js.map

@@ -15,6 +15,7 @@ const auth_roles_entity_1 = require("./auth-roles.entity");
 const user_entity_1 = require("./user.entity");
 let AuthUserRoles = class AuthUserRoles {
 };
+exports.AuthUserRoles = AuthUserRoles;
 __decorate([
     (0, typeorm_1.PrimaryColumn)({ type: 'varchar', length: 255 }),
     (0, typeorm_1.ManyToOne)(() => auth_roles_entity_1.AuthRoles, (authRole) => authRole.auth_user_roles),
@@ -35,8 +36,7 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'int8' }),
     __metadata("design:type", Number)
 ], AuthUserRoles.prototype, "created_by", void 0);
-AuthUserRoles = __decorate([
+exports.AuthUserRoles = AuthUserRoles = __decorate([
     (0, typeorm_1.Entity)()
 ], AuthUserRoles);
-exports.AuthUserRoles = AuthUserRoles;
 //# sourceMappingURL=auth-user-roles.entity.js.map

@@ -11,8 +11,8 @@ const common_1 = require("@nestjs/common");
 const notification_gateway_1 = require("./notification.gateway");
 let NotificationModule = class NotificationModule {
 };
-NotificationModule = __decorate([
+exports.NotificationModule = NotificationModule;
+exports.NotificationModule = NotificationModule = __decorate([
     (0, common_1.Module)({ providers: [notification_gateway_1.NotifcationGateway], exports: [notification_gateway_1.NotifcationGateway] })
 ], NotificationModule);
-exports.NotificationModule = NotificationModule;
 //# sourceMappingURL=notifications.module.js.map

@@ -15,6 +15,7 @@ const auth_user_roles_entity_1 = require("./auth-user-roles.entity");
 const auth_user_permissions_entity_1 = require("./auth-user-permissions.entity");
 let Users = class Users {
 };
+exports.Users = Users;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int4' }),
     __metadata("design:type", Number)
@@ -119,8 +120,7 @@ __decorate([
     (0, typeorm_1.UpdateDateColumn)({ type: 'timestamp' }),
     __metadata("design:type", Date)
 ], Users.prototype, "updated_on", void 0);
-Users = __decorate([
+exports.Users = Users = __decorate([
     (0, typeorm_1.Entity)()
 ], Users);
-exports.Users = Users;
 //# sourceMappingURL=user.entity.js.map

@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validate = void 0;
+exports.validate = validate;
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 var Environment;
@@ -113,5 +113,4 @@ function validate(config) {
     }
     return validatedConfig;
 }
-exports.validate = validate;
 //# sourceMappingURL=environment-config.validation.js.map

@@ -5,5 +5,5 @@ var RabbitMQPattersEnums;
 (function (RabbitMQPattersEnums) {
     RabbitMQPattersEnums["CRUD_LOGS"] = "crud_logs";
     RabbitMQPattersEnums["EMAIL"] = "email";
-})(RabbitMQPattersEnums = exports.RabbitMQPattersEnums || (exports.RabbitMQPattersEnums = {}));
+})(RabbitMQPattersEnums || (exports.RabbitMQPattersEnums = RabbitMQPattersEnums = {}));
 //# sourceMappingURL=rabbitmq.enums.js.map

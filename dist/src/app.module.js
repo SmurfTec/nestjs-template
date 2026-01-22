@@ -35,7 +35,8 @@ let AppModule = class AppModule {
             .forRoutes('*');
     }
 };
-AppModule = __decorate([
+exports.AppModule = AppModule;
+exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             email_module_1.EmailModule,
@@ -59,5 +60,4 @@ AppModule = __decorate([
         providers: [],
     })
 ], AppModule);
-exports.AppModule = AppModule;
 //# sourceMappingURL=app.module.js.map

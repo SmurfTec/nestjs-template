@@ -8,9 +8,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmailConsumer = void 0;
-const bull_1 = require("@nestjs/bull");
+const bull_1 = require("bull");
+const bull_2 = require("@nestjs/bull");
 const email_service_1 = require("../../services/emails/email.service");
 let EmailConsumer = class EmailConsumer {
     constructor(emailService) {
@@ -26,15 +28,15 @@ let EmailConsumer = class EmailConsumer {
         }
     }
 };
+exports.EmailConsumer = EmailConsumer;
 __decorate([
-    (0, bull_1.Process)('email-password-set-job'),
+    (0, bull_2.Process)('email-password-set-job'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [typeof (_a = typeof bull_1.Job !== "undefined" && bull_1.Job) === "function" ? _a : Object]),
     __metadata("design:returntype", Promise)
 ], EmailConsumer.prototype, "handlePasswordSetEmail", null);
-EmailConsumer = __decorate([
-    (0, bull_1.Processor)('emails'),
+exports.EmailConsumer = EmailConsumer = __decorate([
+    (0, bull_2.Processor)('emails'),
     __metadata("design:paramtypes", [email_service_1.MailService])
 ], EmailConsumer);
-exports.EmailConsumer = EmailConsumer;
 //# sourceMappingURL=queues.consumer.js.map

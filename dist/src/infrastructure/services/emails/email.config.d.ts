@@ -1,1 +1,1 @@
-export declare const mailConfigurations: import("@nestjs/common").DynamicModule;
+export declare const mailConfigurations: any;

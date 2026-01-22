@@ -11,12 +11,12 @@ const common_1 = require("@nestjs/common");
 const repository_module_1 = require("../infrastructure/repository/repository.module");
 let UseCaseModule = class UseCaseModule {
 };
-UseCaseModule = __decorate([
+exports.UseCaseModule = UseCaseModule;
+exports.UseCaseModule = UseCaseModule = __decorate([
     (0, common_1.Module)({
         imports: [repository_module_1.RepositoryModule],
         providers: [],
         exports: [],
     })
 ], UseCaseModule);
-exports.UseCaseModule = UseCaseModule;
 //# sourceMappingURL=usecase.module.js.map

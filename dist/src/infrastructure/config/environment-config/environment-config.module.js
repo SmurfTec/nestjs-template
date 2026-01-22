@@ -16,7 +16,8 @@ const envPath = path.resolve(__dirname, '../../../../../env/.env');
 console.log('envPath envconfigmodule', envPath);
 let EnvironmentConfigModule = class EnvironmentConfigModule {
 };
-EnvironmentConfigModule = __decorate([
+exports.EnvironmentConfigModule = EnvironmentConfigModule;
+exports.EnvironmentConfigModule = EnvironmentConfigModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule.forRoot({
@@ -30,5 +31,4 @@ EnvironmentConfigModule = __decorate([
         exports: [environment_config_service_1.EnvironmentConfigService],
     })
 ], EnvironmentConfigModule);
-exports.EnvironmentConfigModule = EnvironmentConfigModule;
 //# sourceMappingURL=environment-config.module.js.map

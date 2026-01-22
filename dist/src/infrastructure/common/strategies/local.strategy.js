@@ -12,8 +12,8 @@ const passport_1 = require("@nestjs/passport");
 const common_1 = require("@nestjs/common");
 let LocalStrategy = class LocalStrategy extends (0, passport_1.PassportStrategy)(passport_local_1.Strategy) {
 };
-LocalStrategy = __decorate([
+exports.LocalStrategy = LocalStrategy;
+exports.LocalStrategy = LocalStrategy = __decorate([
     (0, common_1.Injectable)()
 ], LocalStrategy);
-exports.LocalStrategy = LocalStrategy;
 //# sourceMappingURL=local.strategy.js.map

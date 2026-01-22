@@ -14,8 +14,8 @@ let JsonBodyMiddleware = class JsonBodyMiddleware {
         bodyParser.json()(req, res, next);
     }
 };
-JsonBodyMiddleware = __decorate([
+exports.JsonBodyMiddleware = JsonBodyMiddleware;
+exports.JsonBodyMiddleware = JsonBodyMiddleware = __decorate([
     (0, common_1.Injectable)()
 ], JsonBodyMiddleware);
-exports.JsonBodyMiddleware = JsonBodyMiddleware;
 //# sourceMappingURL=json-body.middleware.js.map

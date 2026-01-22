@@ -13,12 +13,12 @@ const db_1 = require("../entities/db");
 const bcrypt_service_1 = require("../services/bcrypt/bcrypt.service");
 let RepositoryModule = class RepositoryModule {
 };
-RepositoryModule = __decorate([
+exports.RepositoryModule = RepositoryModule;
+exports.RepositoryModule = RepositoryModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature(db_1.default)],
         providers: [bcrypt_service_1.BcryptService],
         exports: [],
     })
 ], RepositoryModule);
-exports.RepositoryModule = RepositoryModule;
 //# sourceMappingURL=repository.module.js.map
