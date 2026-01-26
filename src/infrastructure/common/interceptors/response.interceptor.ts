@@ -1,46 +1,37 @@
+// src/infrastructure/common/interceptors/response.interceptor.ts
 import {
   Injectable,
   NestInterceptor,
   ExecutionContext,
   CallHandler,
 } from '@nestjs/common';
-import { ApiProperty } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-export class ResponseFormat<T> {
-  @ApiProperty()
-  isArray: boolean;
-  @ApiProperty()
-  path: string;
-  @ApiProperty()
-  duration: string;
-  @ApiProperty()
-  method: string;
-
-  data: T;
-}
+import { ApiResponse } from '../../../domain/models/common-response';
 
 @Injectable()
 export class ResponseInterceptor<T>
-  implements NestInterceptor<T, ResponseFormat<T>>
+  implements NestInterceptor<T, ApiResponse<T>>
 {
   intercept(
     context: ExecutionContext,
     next: CallHandler,
-  ): Observable<ResponseFormat<T>> {
+  ): Observable<ApiResponse<T>> {
     const now = Date.now();
     const httpContext = context.switchToHttp();
     const request = httpContext.getRequest();
 
     return next.handle().pipe(
-      map((data) => ({
-        data,
-        isArray: Array.isArray(data),
-        path: request.path,
-        duration: `${Date.now() - now}ms`,
-        method: request.method,
-      })),
+      map((data) => {
+        const duration = `${Date.now() - now}ms`;
+        return ApiResponse.success(
+          data,
+          'Operation completed successfully',
+          request.path,
+          request.method,
+          duration,
+        );
+      }),
     );
   }
 }

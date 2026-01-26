@@ -5,8 +5,8 @@
   "compilerOptions": {
     "assets": [
       {
-        "include": "infrastructure/services/emails/templates/**/*",
-        "outDir": "dist/src",
+        "include": "infrastructure/emails/templates/**/*",
+        "outDir": "dist",
         "watchAssets": true
       }
     ],

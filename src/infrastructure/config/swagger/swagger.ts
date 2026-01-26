@@ -1,8 +1,9 @@
+// src/infrastructure/config/swagger/swagger.ts
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 
 import { SWAGGER_CONFIG } from './swagger.config';
-import { ResponseFormat } from 'src/infrastructure/common/interceptors/response.interceptor';
+import { ApiResponseDto } from 'src/infrastructure/controllers/common/response.dto';
 
 /**
  * Creates an OpenAPI document for an application, via swagger.
@@ -10,11 +11,9 @@ import { ResponseFormat } from 'src/infrastructure/common/interceptors/response.
  * @returns the OpenAPI document
  */
 export function createDocument(app: INestApplication): OpenAPIObject {
-  const { name, url, email } = SWAGGER_CONFIG.contact;
   const builder = new DocumentBuilder()
     // .addBearerAuth()
     .setTitle(SWAGGER_CONFIG.title)
-    .setContact(name, url, email)
     .setDescription(SWAGGER_CONFIG.description)
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
@@ -26,7 +25,7 @@ export function createDocument(app: INestApplication): OpenAPIObject {
   }
   const options = builder.build();
   return SwaggerModule.createDocument(app, options, {
-    extraModels: [ResponseFormat],
+    extraModels: [ApiResponseDto],
     deepScanRoutes: true,
   });
 }

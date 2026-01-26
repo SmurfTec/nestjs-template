@@ -1,44 +1,71 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
   Column,
-  ManyToMany,
+  CreateDateColumn,
+  Index,
+  ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
-import { Users } from './user.entity';
+import { Users } from './users.entity';
+import { NotificationChannel } from './notification-channel.entity';
 
-@Entity()
-export class Notifications {
+export enum NotificationType {
+  ORDER = 'ORDER',
+  PAYMENT = 'PAYMENT',
+  SYSTEM = 'SYSTEM',
+  SHIPMENT = 'SHIPMENT',
+  RETURN = 'RETURN',
+  REFUND = 'REFUND',
+  SUBSCRIPTION = 'SUBSCRIPTION',
+  MARKETING = 'MARKETING',
+}
+
+@Entity({ name: 'notifications' })
+@Index(['user_id', 'created_at'])
+@Index(['user_id', 'is_read'])
+export class Notification {
   @PrimaryGeneratedColumn({ type: 'int4' })
   id: number;
 
-  @Column({ type: 'varchar' })
-  message: string;
+  @Column({ type: 'int4' })
+  @Index()
+  user_id: number;
 
-  @Column({ type: 'varchar', nullable: true })
-  resource_name?: string;
+  @Column({ type: 'varchar', length: 255 })
+  title: string;
 
-  @Column({ type: 'int', nullable: true })
-  resource_id?: number;
+  @Column({ type: 'text' })
+  body: string;
 
-  @Column({ type: 'int', nullable: true })
-  from_user_id?: number;
+  @Column({
+    type: 'varchar',
+    length: 50,
+    enum: NotificationType,
+    default: NotificationType.SYSTEM,
+  })
+  type: NotificationType;
 
-  @Column({ type: 'varchar', nullable: true })
-  from_user_name?: string;
+  @Column({ type: 'jsonb', nullable: true })
+  data: Record<string, any> | null;
 
-  @Column({ type: 'bool', default: true })
-  is_active: boolean;
+  @Column({ type: 'bool', default: false })
+  is_read: boolean;
 
-  @ManyToMany(() => Users)
-  @JoinColumn({ name: 'users' })
-  users: Users[];
+  @Column({ type: 'timestamp', nullable: true })
+  read_at: Date | null;
 
   @CreateDateColumn({ type: 'timestamp' })
-  created_on: Date;
+  created_at: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
-  updated_on: Date;
+  @ManyToOne(() => Users)
+  @JoinColumn({ name: 'user_id' })
+  user: Users;
+
+  @OneToMany(() => NotificationChannel, (channel) => channel.notification, {
+    cascade: true,
+  })
+  channels: NotificationChannel[];
 }
+

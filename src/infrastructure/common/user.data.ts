@@ -1,5 +1,3 @@
-// import { UserModel } from 'src/domain/models/user';
-
 export class UserData {
   constructor(data: any) {
     UserData.data = data;

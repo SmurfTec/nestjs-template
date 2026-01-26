@@ -1,58 +1,56 @@
-import { RabbitMQModule } from './infrastructure/config/rabbitmq/rabbitmq.module';
-import {
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { EnvironmentConfigModule } from './infrastructure/config/environment-config/environment-config.module';
 import { TypeOrmConfigModule } from './infrastructure/config/typeorm/typeorm.module';
-import { ControllerModule } from './infrastructure/controllers/controller.module';
+import { RepositoryModule } from './infrastructure/repository/repository.module';
+import { UsecasesModule } from './usecases/usecase.module';
+import { APP_GUARD } from '@nestjs/core';
 import { BcryptModule } from './infrastructure/services/bcrypt/bcrypt.module';
 import { JwtModule } from './infrastructure/services/jwt/jwt.module';
-
-import { EnvironmentConfigModule } from './infrastructure/config/environment-config/environment-config.module';
-import { GatewayModule } from './infrastructure/gateways/gateway.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
-import { EmailModule } from './infrastructure/services/emails/email.module';
-import { TasksModule } from './infrastructure/common/tasks-scheduling/tasks.module';
-import { NotificationModule } from './infrastructure/services/notifications/notifications.module';
-import { RawBodyMiddleware } from './middlewares/raw-body.middleware';
-import { JsonBodyMiddleware } from './middlewares/json-body.middleware';
-import { ScheduleModule } from '@nestjs/schedule';
+import { ControllerModule } from './infrastructure/controllers/controller.module';
+import { JwtStrategy } from './infrastructure/common/strategies/jwt.strategy';
+import { CustomClsModule } from './infrastructure/services/cls/cls.module';
+import { JwtAuthGuard } from './infrastructure/common/guards/jwtAuth.guard';
+import { JwtRefreshTokenStrategy } from './infrastructure/common/strategies/jwtRefresh.strategy';
+import { LocalStrategy } from './infrastructure/common/strategies/local.strategy';
+import { VerifyUserStrategy } from './infrastructure/common/strategies/verify-user.strategy';
+import { EmailModule } from './infrastructure/emails/email.module';
+import { CacheMangerModule } from './infrastructure/common/caching/cache-manager.module';
+import { JobsModule } from './infrastructure/services/jobs/jobs.module';
+import { GoogleAuthGuard } from './infrastructure/common/guards/googleAuth.gaurd';
+import { GoogleStrategy } from './infrastructure/common/strategies/google.strategy';
+import { AppleAuthGuard } from './infrastructure/common/guards/appleAuth.gaurd';
+import { AppleStrategy } from './infrastructure/common/strategies/apple.strategy';
+import { NotificationModule } from './infrastructure/services/notifications/notification.module';
 
 @Module({
   imports: [
+    JwtModule,
+    BcryptModule,
+    CacheMangerModule,
     EmailModule,
-    TasksModule,
-    // QueueModule,
-    NotificationModule,
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../..', 'uploads'),
-    }),
-    GatewayModule,
-    RabbitMQModule,
+    EnvironmentConfigModule,
     TypeOrmConfigModule,
     ControllerModule,
-    BcryptModule,
-    JwtModule,
-    BcryptModule,
-    JwtModule,
-    EnvironmentConfigModule,
-    ScheduleModule,
+    RepositoryModule,
+    UsecasesModule,
+    CustomClsModule,
+    JobsModule,
+    NotificationModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    LocalStrategy,
+    VerifyUserStrategy,
+    JwtStrategy,
+    JwtRefreshTokenStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    // GoogleAuthGuard,
+    // GoogleStrategy,
+    // AppleAuthGuard,
+    // AppleStrategy,
+  ],
 })
-export class AppModule implements NestModule {
-  public configure(consumer: MiddlewareConsumer): void {
-    consumer
-      .apply(RawBodyMiddleware)
-      .forRoutes({
-        path: '/wallets/webhook',
-        method: RequestMethod.POST,
-      })
-      .apply(JsonBodyMiddleware)
-      .forRoutes('*');
-  }
-}
+export class AppModule {}

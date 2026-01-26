@@ -1,3 +1,4 @@
+// src/infrastructure/config/swagger/swagger.config.ts
 import { SwaggerConfig } from './swagger.interface';
 
 /**
@@ -5,13 +6,13 @@ import { SwaggerConfig } from './swagger.interface';
  * Change this to suit your app!
  */
 export const SWAGGER_CONFIG: SwaggerConfig = {
-  title: 'Test Api Documentation',
+  title: 'Seller Swift api',
   description: 'Nest js api',
   version: '1.0',
   tags: [],
   contact: {
-    name: 'zain',
-    url: 'zain',
-    email: 'muhammadzain8@gmail.com',
+    name: 'uahmadsoft',
+    url: 'uahmadsoft',
+    email: 'umadahmad1928@gmail.com',
   },
 };

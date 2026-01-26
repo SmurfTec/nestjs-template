@@ -1,44 +1,45 @@
-import { diskStorage } from 'multer';
+import { UserRoleController } from './user-role/user-roles.controller';
+import { RoleController } from './role/roles.controller';
+import { UserController } from './user/users.controller';
+import { ProfileController } from './profile/profiles.controller';
+import { SettingsController } from './settings/settings.controller';
+import { OnboardingController } from './onboarding/onboarding.controller';
 import { Module } from '@nestjs/common';
-
-import { MyLogger } from '../common/logger/myLogger';
-import { MulterModule } from '@nestjs/platform-express';
-import { EmailModule } from 'src/infrastructure/services/emails/email.module';
-import { UseCaseModule } from 'src/usecases/usecase.module';
+import { UsecasesModule } from 'src/usecases/usecase.module';
+import { AuthController } from './auth/auth.controller';
+import { RepositoryModule } from '../repository/repository.module';
+import { S3Module } from '../services/s3/s3.module';
+import { ResponseService } from '../common/services/response.service';
+import { SubscriptionController } from './subscription/subscription.controller';
+import { StripeWebhookController } from './subscription/stripe-webhook.controller';
+import { PaymentModule } from '../services/stripe/payment.module';
+import { StripeModule } from '../services/stripe/stripe.module';
+import { NotificationController } from './notifications/notification.controller';
+import { NotificationModule } from '../services/notifications/notification.module';
+import { InvoiceModule } from '../services/invoice/invoice.module';
 
 @Module({
   imports: [
-    UseCaseModule,
-    MulterModule.register({
-      storage: diskStorage({
-        destination: function (req, file, cb) {
-          cb(null, 'uploads');
-        },
-        filename: function (req, file, cb) {
-          if (
-            !(
-              file.mimetype == 'image/png' ||
-              file.mimetype == 'image/jpg' ||
-              file.mimetype == 'image/jpeg'
-            )
-          ) {
-            return cb(new Error('Filetype must be png,jpg or jpeg'), '');
-          }
-
-          const filename =
-            Date.now() +
-            '-' +
-            Math.round(Math.random() * 1e9) +
-            '-' +
-            file.originalname;
-          cb(null, filename);
-        },
-      }),
-      // dest: './uploads',
-    }),
-    EmailModule,
+    UsecasesModule,
+    RepositoryModule,
+    S3Module,
+    PaymentModule,
+    StripeModule,
+    NotificationModule,
+    InvoiceModule,
   ],
-  controllers: [],
-  providers: [MyLogger, EmailModule],
+  controllers: [
+    AuthController,
+    ProfileController,
+    SettingsController,
+    UserController,
+    RoleController,
+    UserRoleController,
+    OnboardingController,
+    SubscriptionController,
+    StripeWebhookController,
+    NotificationController,
+  ],
+  providers: [ResponseService],
 })
 export class ControllerModule {}
