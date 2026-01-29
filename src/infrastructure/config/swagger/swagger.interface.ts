@@ -1,3 +1,4 @@
+// src/infrastructure/config/swagger/swagger.interface.ts
 /**
  * Specifies configuration for the swagger UI (found at /api).
  */

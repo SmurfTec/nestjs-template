@@ -1,108 +1,84 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DatabaseConfig } from '../../../domain/config/database.interface';
-import { JWTConfig } from '../../../domain/config/jwt.interface';
 
 @Injectable()
-export class EnvironmentConfigService implements DatabaseConfig, JWTConfig {
+export class EnvironmentConfigService {
   constructor(private configService: ConfigService) {}
 
-  getShipstationAuth(): string {
-    return this.configService.get<string>('SHIPSTAION');
+  // Application Configuration
+  getPORT(): number {
+    return +this.configService.get<string>('PORT')!;
   }
+
+  // Frontend Configuration
   getFrontEndBaseUrl(): string {
-    return this.configService.get<string>('FRONT_END_BASE_URL');
+    return this.configService.get<string>('FRONT_END_BASE_URL')!;
   }
-  getTempDirectoryPath(): string {
-    return this.configService.get<string>('TEMP_DIRECTORY_PATH');
+
+  // Apple Configuration
+  getAppleClientId(): string {
+    return this.configService.get<string>('APPLE_CLIENT_ID')!;
   }
-  getAppName(): string {
-    return this.configService.get<string>('APP_NAME');
+
+  getAppleTeamId(): string {
+    return this.configService.get<string>('APPLE_TEAM_ID')!;
   }
-  getMinioEndPoint(): string {
-    return this.configService.get<string>('MINIO_END_POINT');
+
+  getAppleKeyId(): string {
+    return this.configService.get<string>('APPLE_KEY_ID')!;
   }
-  getMinioPort(): string {
-    return this.configService.get<string>('MINIO_PORT');
+
+  getApplePrivateKey(): string {
+    return this.configService
+      .get<string>('APPLE_PRIVATE_KEY')!
+      .replace(/\\n/g, '\n');
   }
-  getMinioAccessKey(): string {
-    return this.configService.get<string>('MINIO_ACCESS_KEY');
+
+  getAppleClientCallBackUrl(): string {
+    return this.configService.get<string>('APPLE_CALLBACK_URL')!;
   }
-  getMinioSecretKey(): string {
-    return this.configService.get<string>('MINIO_SECRET_KEY');
+
+  // Google Configuration
+  getGoogleCallBackUrl(): string {
+    return this.configService.get<string>('GOOGLE_CALLBACK_URL')!;
   }
+
+  getGoogleClientId(): string {
+    return this.configService.get<string>('GOOGLE_CLIENT_ID')!;
+  }
+
+  getGoogleClientSecret(): string {
+    return this.configService.get<string>('GOOGLE_CLIENT_SECRET')!;
+  }
+
+  // Email Configuration
+  getSupportName(): string {
+    return this.configService.get<string>('SUPPORT_NAME');
+  }
+
+  getSupportEmail(): string {
+    return this.configService.get<string>('SUPPORT_EMAIL');
+  }
+
   getEmailHost(): string {
     return this.configService.get<string>('EMAIL_HOST');
   }
-  getEmailUser(): string {
-    return this.configService.get<string>('EMAIL_USER');
-  }
-  getEmailPass(): string {
-    return this.configService.get<string>('EMAIL_PASS');
-  }
+
   getEmailPort(): string {
     return this.configService.get<string>('EMAIL_PORT');
   }
-  getGoogleClientId(): string {
-    return this.configService.get<string>('GOOGLE_CLIENT_ID');
-  }
-  getGoogleClientSecret(): string {
-    return this.configService.get<string>('GOOGLE_CLIENT_SECRET');
-  }
-  getRunGisService(): boolean {
-    return this.configService.get<string>('RUN_GIS_SERVICE') === 'true';
+
+  getEmailUser(): any {
+    const user = this.configService.get<string>('EMAIL_USER');
+    return user ? { user } : {};
   }
 
-  getRabbitMQHost(): string {
-    return this.configService.get<string>('RABBITMQ_HOST');
+  getEmailPass(): any {
+    const pass = this.configService.get<string>('EMAIL_PASS');
+    return pass ? { pass } : {};
   }
 
-  getRabbitMQPort(): string {
-    return this.configService.get<string>('RABBITMQ_PORT');
-  }
-
-  getRabbitMQUsername(): string {
-    return this.configService.get<string>('RABBITMQ_USERNAME');
-  }
-
-  getRabbitMQPassword(): string {
-    return this.configService.get<string>('RABBITMQ_PASSWORD');
-  }
-
-  getNceBaseUrl(): string {
-    return this.configService.get<string>('NCE_BASEURL');
-  }
-
-  getRedisHost(): string {
-    return this.configService.get<string>('REDIS_HOST');
-  }
-
-  getStripeSecretKey(): string {
-    return this.configService.get<string>('STRIPE_SECRET_KEY');
-  }
-
-  getRedisPort(): string {
-    return this.configService.get<string>('REDIS_PORT');
-  }
-  getRedisPassword(): string {
-    return this.configService.get<string>('REDIS_PASSWORD');
-  }
-  getRedisUsername(): string {
-    return this.configService.get<string>('REDIS_USERNAME');
-  }
-
-  getRedisUserPasswordRequired(): boolean {
-    return (
-      this.configService.get<string>('REDIS_USER_PASSWORD_REQUIRED') === 'true'
-    );
-  }
-
-  getTablesExcludedFromCRUDLogs(): string[] {
-    return this.configService
-      .get<string>('TABLES_EXCLUDED_FROM_CRUD_LOG')
-      .split(',');
-  }
-
+  // JWT Configuration
   getJwtSecret(): string {
     return this.configService.get<string>('JWT_SECRET');
   }
@@ -119,39 +95,31 @@ export class EnvironmentConfigService implements DatabaseConfig, JWTConfig {
     return this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRATION_TIME');
   }
 
+  // Database Configuration
   getDatabaseHost(): string {
-    return this.configService.get<string>('DATABASE_HOST');
+    return this.configService.get<string>('DATABASE_HOST')!;
   }
 
   getDatabasePort(): number {
-    return this.configService.get<number>('DATABASE_PORT');
+    return this.configService.get<number>('DATABASE_PORT')!;
   }
 
   getDatabaseUser(): string {
-    return this.configService.get<string>('DATABASE_USERNAME');
+    return this.configService.get<string>('DATABASE_USERNAME')!;
   }
 
   getDatabasePassword(): string {
-    return this.configService.get<string>('DATABASE_PASSWORD');
+    return this.configService.get<string>('DATABASE_PASSWORD')!;
   }
 
   getDatabaseName(): string {
-    return this.configService.get<string>('DATABASE_NAME');
+    return this.configService.get<string>('DATABASE_NAME')!;
   }
 
   getDatabaseType(): any {
-    return this.configService.get<string>('DATABASE_TYPE');
+    return this.configService.get<string>('DATABASE_TYPE')!;
   }
 
-  // getDatabaseSchema(): string {
-  //   return this.configService.get<string>('DATABASE_SCHEMA');
-  // }
-
-  // getDatabaseSync(): boolean {
-  //   const result = this.configService.get<boolean>('DATABASE_SYNCHRONIZE');
-  //   console.log(typeof result, result);
-  //   return result;
-  // }
   getDatabaseSync(): boolean {
     return this.configService.get<string>('DATABASE_SYNCHRONIZE') === 'true';
   }
@@ -160,84 +128,63 @@ export class EnvironmentConfigService implements DatabaseConfig, JWTConfig {
     return this.configService.get<string>('DATABASE_MIGRATIONS_RUN') === 'true';
   }
 
-  getGisDatabaseHost(): string {
-    return this.configService.get<string>('GIS_DATABASE_HOST');
-  }
-
-  getGisDatabasePort(): number {
-    return this.configService.get<number>('GIS_DATABASE_PORT');
-  }
-
-  getGisDatabaseUser(): string {
-    return this.configService.get<string>('GIS_DATABASE_USERNAME');
-  }
-
-  getGisDatabasePassword(): string {
-    return this.configService.get<string>('GIS_DATABASE_PASSWORD');
-  }
-
-  getGisDatabaseName(): string {
-    return this.configService.get<string>('GIS_DATABASE_NAME');
-  }
-
-  getGisDatabaseType(): any {
-    return this.configService.get<string>('GIS_DATABASE_TYPE');
-  }
-
-  getGisDatabaseSchema(): any {
-    return this.configService.get<string>('GIS_DATABASE_SCHEMA');
-  }
-
-  getGisDatabaseSync(): boolean {
+  // Cache Configuration
+  getLocalMemoryUsageForCacheManager(): boolean {
     return (
-      this.configService.get<string>('GIS_DATABASE_SYNCHRONIZE') === 'true'
+      !this.configService.get<string>('USE_LOCAL_MEMORY_CACHE_MANAGER') ||
+      this.configService
+        .get<string>('USE_LOCAL_MEMORY_CACHE_MANAGER')
+        .toLowerCase() === 'true'
     );
   }
 
-  getGisDatabaseMigrationRun(): boolean {
-    return (
-      this.configService.get<string>('GIS_DATABASE_MIGRATIONS_RUN') === 'true'
-    );
-  }
-
-  getPORT(): string {
-    return this.configService.get<string>('PORT');
-  }
   getCacheManagerPort(): string {
     return this.configService.get<string>('CACHE_MANAGER_PORT');
   }
+
   getCacheManagerHost(): string {
     return this.configService.get<string>('CACHE_MANAGER_HOST');
   }
 
   getCacheManagerPassword(): any {
     const password = this.configService.get<string>('CACHE_MANAGER_PASSWORD');
-    return password ? { password } : {};
+    return password ? password : '';
   }
 
-  getRabbitMQUrl(): string {
-    return `amqp://${this.getRabbitMQUsername()}:${this.getRabbitMQPassword()}@${this.getRabbitMQHost()}:${this.getRabbitMQPort()}`;
+  // AWS Configuration
+  getAwsAccessKey(): string {
+    return this.configService.get<string>('AWS_ACCESS_KEY');
   }
 
-  getRedisUrl() {
-    if (this.checkIfRedisUserAndPasswordExists()) {
-      return this.getRedisUrlWithUserAndPassword();
-    }
-    return this.getRedisUrlWithoutUserAndPassword();
+  getAwsSecretAccessKey(): string {
+    return this.configService.get<string>('AWS_SECRET_ACCESS_KEY');
   }
 
-  getRedisUrlWithUserAndPassword() {
-    return `redis://${this.getRedisUsername()}:${this.getRedisPassword()}@${this.getCacheManagerHost()}:${this.getCacheManagerPort()}`;
+  getAwsRegion(): string {
+    return this.configService.get<string>('AWS_REGION');
   }
 
-  getRedisUrlWithoutUserAndPassword() {
-    return `redis://${this.getCacheManagerHost()}:${this.getCacheManagerPort()}`;
+  getAwsBucketName(): string {
+    return this.configService.get<string>('AWS_BUCKET_NAME');
   }
 
-  checkIfRedisUserAndPasswordExists(): boolean {
-    if (this.getRedisPassword() && this.getRedisUsername()) {
-      return true;
-    }
-    return false;
+  getAmazonClientId(): string {
+    return this.configService.get<string>('AMAZON_SP_API_CLIENT_ID');
+  }
+
+  getAmazonClientSecret(): string {
+    return this.configService.get<string>('AMAZON_SP_API_CLIENT_SECRET');
+  }
+
+  getAmazonRedirectURI(): string {
+    return this.configService.get<string>('AMAZON_SP_API_REDIRECT_URI');
+  }
+
+  getAmazonBaseUrl(): string {
+    return this.configService.get<string>('AMAZON_SP_API_BASE_URL');
+  }
+
+  getAmazonRefreshToken(): string {
+    return this.configService.get<string>('AMAZON_SP_API_REFRESH_TOKEN');
   }
 }

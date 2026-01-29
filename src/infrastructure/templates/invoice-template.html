@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice {{invoiceNumber}}</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      color: #333;
+      line-height: 1.6;
+      background: #fff;
+      padding: 40px;
+    }
+
+    .invoice-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 40px;
+      padding-bottom: 30px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .logo-section {
+      flex: 1;
+    }
+
+    .logo {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .company-info {
+      margin-top: 10px;
+    }
+
+    .company-name {
+      font-size: 20px;
+      font-weight: 600;
+      color: #111;
+      margin-bottom: 5px;
+    }
+
+    .company-details {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.8;
+    }
+
+    .invoice-info {
+      text-align: right;
+    }
+
+    .invoice-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 20px;
+    }
+
+    .invoice-meta {
+      font-size: 12px;
+      color: #666;
+      line-height: 2;
+    }
+
+    .invoice-meta strong {
+      color: #111;
+      font-weight: 600;
+    }
+
+    .billing-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .billing-box {
+      background: #f9fafb;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .billing-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #666;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .billing-content {
+      font-size: 13px;
+      color: #111;
+      line-height: 1.8;
+    }
+
+    .billing-content strong {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .amount-due {
+      background: #f3f4f6;
+      padding: 30px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .amount-label {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .amount-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 12px;
+    }
+
+    .amount-due-date {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .pay-link {
+      display: inline-block;
+      margin-top: 12px;
+      color: #667eea;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .line-items {
+      margin-bottom: 30px;
+    }
+
+    .line-items-header {
+      display: grid;
+      grid-template-columns: 3fr 1fr 1fr 1fr;
+      gap: 15px;
+      padding: 15px 0;
+      border-bottom: 2px solid #e5e7eb;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #666;
+      letter-spacing: 0.5px;
+    }
+
+    .line-item {
+      display: grid;
+      grid-template-columns: 3fr 1fr 1fr 1fr;
+      gap: 15px;
+      padding: 20px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .line-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-description {
+      font-size: 13px;
+      color: #111;
+    }
+
+    .item-description .period {
+      font-size: 11px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .item-qty,
+    .item-price,
+    .item-amount {
+      font-size: 13px;
+      color: #111;
+      text-align: right;
+    }
+
+    .item-amount {
+      font-weight: 600;
+    }
+
+    .summary {
+      margin-top: 30px;
+      margin-left: auto;
+      width: 300px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .summary-row.total {
+      border-top: 2px solid #e5e7eb;
+      margin-top: 10px;
+      padding-top: 15px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #111;
+    }
+
+    .summary-label {
+      font-weight: 500;
+    }
+
+    .summary-value {
+      text-align: right;
+    }
+
+    .footer {
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid #e5e7eb;
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <div class="invoice-container">
+    <div class="header">
+      <div class="logo-section">
+        <div class="logo">{{companyInitials}}</div>
+        <div class="company-info">
+          <div class="company-name">{{companyName}}</div>
+          <div class="company-details">
+            {{companyAddress}}<br>
+            {{companyPhone}}<br>
+            {{companyEmail}}
+          </div>
+        </div>
+      </div>
+      <div class="invoice-info">
+        <div class="invoice-title">Invoice</div>
+        <div class="invoice-meta">
+          <div><strong>Invoice Number:</strong> {{invoiceNumber}}</div>
+          <div><strong>Date of Issue:</strong> {{issueDate}}</div>
+          <div><strong>Date Due:</strong> {{dueDate}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="billing-section">
+      <div class="billing-box">
+        <div class="billing-label">Bill to</div>
+      <div class="billing-content">
+        <strong>{{billingName}}</strong>
+        {{#if billingEmail}}
+        <div>{{billingEmail}}</div>
+        {{/if}}
+        {{#if billingAddress}}
+        <div>{{billingAddress}}</div>
+        {{/if}}
+      </div>
+      </div>
+      <div class="billing-box">
+        <div class="billing-label">Ship to</div>
+      <div class="billing-content">
+        <strong>{{shippingName}}</strong>
+        {{#if shippingAddress}}
+        <div>{{shippingAddress}}</div>
+        {{/if}}
+      </div>
+      </div>
+    </div>
+
+    <div class="amount-due">
+      <div class="amount-label">Amount Due</div>
+      <div class="amount-value">{{currency}} {{total}}</div>
+      <div class="amount-due-date">Due on {{dueDate}}</div>
+      {{#if payOnlineUrl}}
+      <a href="{{payOnlineUrl}}" class="pay-link">Pay online</a>
+      {{/if}}
+    </div>
+
+    <div class="line-items">
+      <div class="line-items-header">
+        <div>Description</div>
+        <div style="text-align: right;">Qty</div>
+        <div style="text-align: right;">Unit Price</div>
+        <div style="text-align: right;">Amount</div>
+      </div>
+      {{#each lineItems}}
+      <div class="line-item">
+        <div class="item-description">
+          {{description}}
+          {{#if period}}
+          <div class="period">Period: {{period.start}} - {{period.end}}</div>
+          {{/if}}
+        </div>
+        <div class="item-qty">{{quantity}}</div>
+        <div class="item-price">{{currency}} {{unitPrice}}</div>
+        <div class="item-amount">{{currency}} {{amount}}</div>
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="summary">
+      <div class="summary-row">
+        <span class="summary-label">Subtotal</span>
+        <span class="summary-value">{{currency}} {{subtotal}}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Total excluding tax</span>
+        <span class="summary-value">{{currency}} {{subtotal}}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Tax ({{taxRate}}% on {{currency}} {{subtotal}})</span>
+        <span class="summary-value">{{currency}} {{tax}}</span>
+      </div>
+      <div class="summary-row total">
+        <span class="summary-label">Total</span>
+        <span class="summary-value">{{currency}} {{total}}</span>
+      </div>
+      <div class="summary-row total">
+        <span class="summary-label">Amount due</span>
+        <span class="summary-value">{{currency}} {{total}}</span>
+      </div>
+    </div>
+
+    {{#if notes}}
+    <div class="footer">
+      <div style="margin-bottom: 10px;"><strong>Notes:</strong></div>
+      <div>{{notes}}</div>
+    </div>
+    {{/if}}
+  </div>
+</body>
+</html>
+

@@ -1,29 +1,40 @@
-import { ApiOkResponse } from '@nestjs/swagger';
+import { BadRequestException } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
-import { IsEnum, IsString, validateSync } from 'class-validator';
-
-enum Environment {
-  Development = 'development',
-  Production = 'production',
-  Local = 'local',
-  Test = 'test',
-}
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  validateSync,
+} from 'class-validator';
 
 class EnvironmentVariables {
-  @IsEnum(Environment)
-  NODE_ENV: Environment;
+  // Database Variables
+  @IsNotEmpty()
   @IsString()
-  EMAIL_HOST: string;
+  DATABASE_TYPE: string;
+  @IsNotEmpty()
   @IsString()
-  EMAIL_USER: string;
+  DATABASE_NAME: string;
+  @IsNotEmpty()
   @IsString()
-  EMAIL_PASS: string;
+  DATABASE_PORT: string;
+  @IsNotEmpty()
   @IsString()
-  EMAIL_PORT: string;
+  DATABASE_HOST: string;
+  @IsNotEmpty()
   @IsString()
-  GOOGLE_CLIENT_ID: string;
+  DATABASE_USERNAME: string;
+  @IsOptional()
   @IsString()
-  GOOGLE_CLIENT_SECRET: string;
+  DATABASE_PASSWORD: string;
+  @IsNotEmpty()
+  @IsString()
+  DATABASE_SYNCHRONIZE: string;
+  @IsNotEmpty()
+  @IsString()
+  DATABASE_MIGRATIONS_RUN: string;
+
+  // JWT Variables
   @IsString()
   JWT_SECRET: string;
   @IsString()
@@ -32,26 +43,67 @@ class EnvironmentVariables {
   JWT_REFRESH_TOKEN_SECRET: string;
   @IsString()
   JWT_REFRESH_TOKEN_EXPIRATION_TIME: string;
-  @IsString()
-  DATABASE_TYPE: string;
-  @IsString()
-  DATABASE_NAME: string;
-  @IsString()
-  DATABASE_PORT: string;
-  @IsString()
-  DATABASE_HOST: string;
-  @IsString()
-  DATABASE_USERNAME: string;
-  @IsString()
-  DATABASE_PASSWORD: string;
-  @IsString()
-  DATABASE_SYNCHRONIZE: string;
-  @IsString()
-  DATABASE_MIGRATIONS_RUN: string;
-  
+
+  // Application Variables
+  @IsNotEmpty()
   @IsString()
   PORT: string;
 
+  // Cache Variables
+  @IsString()
+  @IsOptional()
+  CACHE_MANAGER_HOST: string;
+  @IsString()
+  @IsOptional()
+  CACHE_MANAGER_PORT: string;
+  @IsString()
+  @IsOptional()
+  USE_LOCAL_MEMORY_CACHE_MANAGER: string;
+
+  // Email Variables
+  @IsString()
+  EMAIL_PORT: string;
+  @IsString()
+  EMAIL_HOST: string;
+  // @IsString()
+  // EMAIL_USER: string;
+  // @IsString()
+  // EMAIL_PASS: string;
+  @IsString()
+  SUPPORT_EMAIL: string;
+  @IsString()
+  SUPPORT_NAME: string;
+
+  // Google Variables
+  @IsString()
+  GOOGLE_CLIENT_ID: string;
+  @IsString()
+  GOOGLE_CLIENT_SECRET: string;
+  @IsString()
+  GOOGLE_CALLBACK_URL: string;
+
+  // Apple Variables
+  @IsString()
+  APPLE_CLIENT_ID: string;
+  @IsString()
+  APPLE_TEAM_ID: string;
+  @IsString()
+  APPLE_KEY_ID: string;
+  @IsString()
+  APPLE_PRIVATE_KEY: string;
+  @IsString()
+  APPLE_CALLBACK_URL: string;
+
+  // Stripe Variables
+  @IsString()
+  @IsOptional()
+  STRIPE_SECRET_KEY: string;
+  @IsString()
+  @IsOptional()
+  STRIPE_WEBHOOK_SECRET: string;
+  @IsString()
+  @IsOptional()
+  STRIPE_PUBLISHABLE_KEY: string;
 }
 
 export function validate(config: Record<string, unknown>) {
@@ -63,7 +115,7 @@ export function validate(config: Record<string, unknown>) {
   });
 
   if (errors.length > 0) {
-    throw new Error(errors.toString());
+    throw new BadRequestException(errors.toString());
   }
   return validatedConfig;
 }

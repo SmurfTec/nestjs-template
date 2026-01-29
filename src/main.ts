@@ -1,43 +1,48 @@
-import { HttpAdapterHost, NestFactory, NestApplication } from '@nestjs/core';
-import { SwaggerModule } from '@nestjs/swagger';
-import * as cookieParser from 'cookie-parser';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { config } from 'dotenv';
+import { ValidationPipe } from '@nestjs/common';
+import cookieParser from 'cookie-parser';
 import { EnvironmentConfigService } from './infrastructure/config/environment-config/environment-config.service';
 import { ConfigService } from '@nestjs/config';
-import { ValidationPipe } from '@nestjs/common';
-import { AllExceptionsFilter } from './infrastructure/common/exceptions/global-exception-handler';
-import helmet from 'helmet';
+import { SwaggerModule } from '@nestjs/swagger';
+import * as path from 'path';
 import { createDocument } from './infrastructure/config/swagger/swagger';
+import { IoAdapter } from '@nestjs/platform-socket.io';
+import * as bodyParser from 'body-parser';
+import { setupBullBoard } from './infrastructure/services/bullboard/bullboard';
 
-//config
+const envPath = path.resolve(process.cwd(), 'env', '.env');
+
+config({ path: envPath });
 const configSerivce = new EnvironmentConfigService(new ConfigService());
-
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    bodyParser: false,
-  });
+  const app = await NestFactory.create(AppModule);
+
+  // Enable WebSocket support
+  app.useWebSocketAdapter(new IoAdapter(app));
+  app.setGlobalPrefix('api/v1');
+  app.use(cookieParser());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  ); 
+  app.useWebSocketAdapter(new IoAdapter(app));
   app.enableCors({
-    origin: true,
+    origin: '*',
     credentials: true,
   });
-  const httpAdapterHost = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new AllExceptionsFilter(httpAdapterHost));
-  app.use(cookieParser());
-  app.useGlobalPipes(new ValidationPipe());
-  
-  // app.disable('x-powered-by');
-  app.getHttpAdapter().getInstance().disable('x-powered-by');
+  app.use(
+    '/webhooks/stripe',
+    bodyParser.raw({ type: 'application/json' }),
+  );
+  SwaggerModule.setup('docs', app, createDocument(app));
 
-  app.enableCors();
-  app.use(helmet());
-  app.use(helmet.noSniff());
-  app.use(helmet.hidePoweredBy());
-  app.use(helmet.contentSecurityPolicy());
+  setupBullBoard(app);
 
-  SwaggerModule.setup('api', app, createDocument(app));
-
-  await app.listen(configSerivce.getPORT() || 3010, () => {
-    console.log(`app is listening on port ${configSerivce.getPORT()}`);
+  await app.listen(configSerivce.getPORT(), () => {
+    console.log(`listening on port : ${configSerivce.getPORT()}`);
   });
 }
 bootstrap();

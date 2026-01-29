@@ -1,12 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import {
-  IJwtService,
-  IJwtServicePayload,
-} from '../../../domain/adapters/jwt.interface';
+import { IJwtServicePayload } from 'src/domain/adapters/jwt.interface';
 
 @Injectable()
-export class JwtTokenService implements IJwtService {
+export class JwtTokenService {
   constructor(private readonly jwtService: JwtService) {}
 
   async checkToken(token: string): Promise<any> {
@@ -22,6 +19,11 @@ export class JwtTokenService implements IJwtService {
     return this.jwtService.sign(payload, {
       secret: secret,
       expiresIn: expiresIn,
+    });
+  }
+  createTokenWithNoExpiry(payload: IJwtServicePayload, secret: string): string {
+    return this.jwtService.sign(payload, {
+      secret: secret,
     });
   }
 }

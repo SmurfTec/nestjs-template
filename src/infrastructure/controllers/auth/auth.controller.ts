@@ -1,594 +1,459 @@
-// import { NotificationsUseCases } from './../../../usecases/notification/notifications.usecases';
-// import { AuthorizationUseCases } from 'src/usecases/auth/authorization.usecases';
-// import { MailService } from 'src/infrastructure/services/emails/email.service';
-// import { BcryptService } from './../../services/bcrypt/bcrypt.service';
-// import { UserData } from 'src/infrastructure/common/user.data';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Req,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse as SwaggerApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
-// import {
-//   BadRequestException,
-//   Body,
-//   Controller,
-//   Get,
-//   HttpException,
-//   HttpStatus,
-//   Param,
-//   ParseIntPipe,
-//   Patch,
-//   Post,
-//   Put,
-//   Req,
-//   Request,
-//   UnauthorizedException,
-//   UseGuards,
-//   Response,
-//   Next,
-//   ForbiddenException,
-// } from '@nestjs/common';
-// import {
-//   ApiBearerAuth,
-//   ApiBody,
-//   ApiExtraModels,
-//   ApiOperation,
-//   ApiResponse,
-//   ApiTags,
-// } from '@nestjs/swagger';
+import {
+  AuthLoginDto,
+  AuthSignUpDto,
+  UpdatePasswordDto,
+  InitiateEmailUpdateDto,
+  VerifyEmailUpdateDto,
+  AuthVerifyUserDto,
+  ForgotPasswordDto,
+  ResendOtpDto,
+  ResetPasswordDto,
+} from './auth-dto.class';
+import { IsAuthPresenter } from './auth.presenter';
 
-// import {
-//   AuthConfirmPhoneDto,
-//   AuthConfirmSignUpDto,
-//   AuthGoogleDto,
-//   AuthLoginDto,
-//   AuthSignUpDto,
-//   ForgotPasswordDto,
-//   ResendCodeDto,
-//   ResetPasswordDto,
-//   SetPasswordDto,
-//   UpdatePasswordDto,
-//   ValidatePasswordDto,
-// } from './dtos/auth.dto';
-// import { IsAuthPresenter } from './auth.presenter';
+import JwtRefreshGuard from '../../common/guards/jwtRefresh.guard';
+import { LoginGuard } from '../../common/guards/login.guard';
+import { VerifyUserGuard } from '../../common/guards/verify-user.guard';
+import { LoginUseCases } from '../../../usecases/auth/login.usecases';
+import { IsAuthenticatedUseCases } from '../../../usecases/auth/isAuthenticated.usecases';
+import { LogoutUseCases } from '../../../usecases/auth/logout.usecases';
+import { AllowUnAuthorizedRequest } from 'src/infrastructure/common/decorators/allow-unauthorized-reques.decorator';
+import { Throttle, minutes } from '@nestjs/throttler';
+import { UserUseCases } from 'src/usecases/user/users.usecases';
+import { GoogleAuthGuard } from 'src/infrastructure/common/guards/googleAuth.gaurd';
+import { AppleAuthGuard } from 'src/infrastructure/common/guards/appleAuth.gaurd';
+import { ResponseService } from 'src/infrastructure/common/services/response.service';
+import {
+  SuccessResponseDto,
+  CreatedResponseDto,
+  UnauthorizedResponseDto,
+  BadRequestResponseDto,
+} from '../common/response.dto';
 
-// import JwtRefreshGuard from '../../common/guards/jwtRefresh.guard';
-// import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
-// import { LoginGuard } from '../../common/guards/login.guard';
+@Controller('/auth')
+@ApiTags('auth')
+@SwaggerApiResponse({
+  status: 401,
+  description: 'No authorization token was found',
+})
+@SwaggerApiResponse({ status: 500, description: 'Internal error' })
+@ApiExtraModels(IsAuthPresenter)
+export class AuthController {
+  constructor(
+    private readonly loginUsecaseProxy: LoginUseCases,
+    private readonly logoutUsecaseProxy: LogoutUseCases,
+    private readonly isAuthUsecaseProxy: IsAuthenticatedUseCases,
+    private readonly userUseCases: UserUseCases,
+    private readonly responseService: ResponseService,
+  ) {}
 
-// import { LoginUseCases } from '../../../usecases/auth/login.usecases';
-// import { IsAuthenticatedUseCases } from '../../../usecases/auth/is-authenticated.usecases';
-// import { LogoutUseCases } from '../../../usecases/auth/logout.usecases';
+  @Post('login')
+  @Throttle({ default: { ttl: minutes(15), limit: 10 } })
+  @AllowUnAuthorizedRequest()
+  @UseGuards(LoginGuard)
+  @ApiBearerAuth()
+  @ApiBody({ type: AuthLoginDto })
+  @ApiOperation({ 
+    description: 'Login with optional 2FA support. If user has 2FA enabled, first call without twoFactorToken will return 401 with message "Two-factor authentication required". Then call again with twoFactorToken.' 
+  })
+  @SwaggerApiResponse({
+    status: 200,
+    description: 'Login successful',
+    type: SuccessResponseDto,
+  })
+  @SwaggerApiResponse({
+    status: 401,
+    description: 'Invalid credentials or 2FA required',
+    type: UnauthorizedResponseDto,
+  })
+  async login(@Body() auth: AuthLoginDto, @Request() request: any) {
+    const accessToken = await this.loginUsecaseProxy.getJwtToken(auth.email);
+    const refreshToken = await this.loginUsecaseProxy.getJwtRefreshToken(
+      auth.email,
+    );
 
-// import { ApiResponseType } from '../../common/swagger/response.decorator';
-// import { UserUseCases } from 'src/usecases/user/user.usecases';
-// import { ProfilesUseCases } from 'src/usecases/profile/profile.usecases';
-// import { catchAsync } from 'src/utils/catch-async';
+    request.res.setHeader('Authorization', `Bearer ${accessToken}`);
+    request.res.setHeader('x-refresh-token', refreshToken);
+    
+    const loginData = {
+      ...request.user, 
+      accessToken,
+      refreshToken,
+    };
+    
+    return this.responseService.success(loginData, 'Login successful');
+  }
 
-// @Controller('auth')
-// @ApiTags('auth')
-// @ApiResponse({
-//   status: 401,
-//   description: 'No authorization token was found',
-// })
-// @ApiResponse({ status: 500, description: 'Internal error' })
-// @ApiExtraModels(IsAuthPresenter)
-// export class AuthController {
-//   constructor(
-//     private readonly loginUsecaseProxy: LoginUseCases,
-//     private readonly logoutUsecaseProxy: LogoutUseCases,
-//     private readonly isAuthUsecaseProxy: IsAuthenticatedUseCases,
-//     private readonly userUseCases: UserUseCases,
-//     private readonly profileUseCases: ProfilesUseCases,
-//     private readonly bcryptService: BcryptService,
-//     private emailService: MailService,
-//     private authorizationUseCases: AuthorizationUseCases,
-//     private notificationsUseCases: NotificationsUseCases,
-//   ) {}
+  @Get('google')
+  @AllowUnAuthorizedRequest()
+  @UseGuards(GoogleAuthGuard)
+  async googleAuth() {
+    // Redirects to Google Sign-In
+  }
 
-//   @Post('login')
-//   @UseGuards(LoginGuard)
-//   @ApiBearerAuth()
-//   @ApiBody({ type: AuthLoginDto })
-//   @ApiOperation({ description: 'login' })
-//   async login(
-//     @Body() auth: AuthLoginDto,
-//     @Request() req,
-//     @Response() res,
-//     @Next() next,
-//   ) {
-//     return await catchAsync(async (req: any, res, next) => {
-//       let user = req.user?.user || req.user;
+  @Get('google/callback')
+  @AllowUnAuthorizedRequest()
+  @UseGuards(GoogleAuthGuard)
+  @SwaggerApiResponse({
+    status: 200,
+    description: 'Google authentication successful',
+    type: SuccessResponseDto,
+  })
+  async googleAuthRedirect(@Req() req) {
+    const user = await this.userUseCases.socialSignIn(req.user);
+    const accessToken = await this.loginUsecaseProxy.getJwtToken(user.email);
+    const refreshToken = await this.loginUsecaseProxy.getJwtRefreshToken(
+      user.email,
+    );
 
-//       if (user.is_banned) {
-//         throw new ForbiddenException('You are banned from the platform');
-//       }
-//       const accessTokenCookie =
-//         await this.loginUsecaseProxy.getCookieWithJwtToken(auth.email);
+    req.res.setHeader('Authorization', `Bearer ${accessToken}`);
+    req.res.setHeader('x-refresh-token', refreshToken);
+    req.user = user;
 
-//       const refreshTokenCookie =
-//         await this.loginUsecaseProxy.getCookieWithJwtRefreshToken(auth.email);
+    return this.responseService.success(user, 'Google authentication successful');
+  }
 
-//       const authCheckCookie = this.loginUsecaseProxy.getCookieForAuthCheck();
+  @Get('apple')
+  @AllowUnAuthorizedRequest()
+  @UseGuards(AppleAuthGuard)
+  async appleAuth() {
+    // Redirects to Apple Sign-In
+  }
 
-//       return res.json({
-//         user,
-//         authentication: accessTokenCookie,
-//         refresh: refreshTokenCookie,
-//       });
-//     })(req, res, next);
-//   }
+  @Get('apple/callback')
+  @AllowUnAuthorizedRequest()
+  @UseGuards(AppleAuthGuard)
+  @SwaggerApiResponse({
+    status: 200,
+    description: 'Apple authentication successful',
+    type: SuccessResponseDto,
+  })
+  async appleAuthRedirect(@Req() req) {
+    const user = await this.userUseCases.socialSignIn(req.user);
+    const accessToken = await this.loginUsecaseProxy.getJwtToken(user.email);
+    const refreshToken = await this.loginUsecaseProxy.getJwtRefreshToken(
+      user.email,
+    );
 
-//   @Post('google-login')
-//   @ApiBearerAuth()
-//   @ApiBody({ type: AuthGoogleDto })
-//   @ApiOperation({ description: 'google-login' })
-//   async googleLogin(
-//     @Body() auth: AuthGoogleDto,
-//     @Request() req,
-//     @Response() res,
-//     @Next() next,
-//   ) {
-//     return await catchAsync(async (req, res, next) => {
-//       let user = await this.userUseCases.checkUser(auth.email);
+    req.res.setHeader('Authorization', `Bearer ${accessToken}`);
+    req.res.setHeader('x-refresh-token', refreshToken);
+    req.user = user;
 
-//       if (!user) {
-//         user = await this.userUseCases.createUser({
-//           email: auth.email,
-//           password: `${Math.random() * 131312}`,
-//           is_social_login: true,
-//           is_active: true,
-//         });
-//       } else {
-//         if (!user.is_social_login) {
-//           throw new UnauthorizedException('Please login with your password');
-//         }
-//       }
-//       const accessTokenCookie =
-//         await this.loginUsecaseProxy.getCookieWithJwtToken(user.email);
+    return this.responseService.success(user, 'Apple authentication successful');
+  }
 
-//       const refreshTokenCookie =
-//         await this.loginUsecaseProxy.getCookieWithJwtRefreshToken(user.email);
+  @Post('signup')
+  @ApiBearerAuth()
+  @AllowUnAuthorizedRequest()
+  @SwaggerApiResponse({
+    status: 201,
+    description: 'User signup successful',
+    type: CreatedResponseDto,
+  })
+  @SwaggerApiResponse({
+    status: 400,
+    description: 'Bad request',
+    type: BadRequestResponseDto,
+  })
+  async SignUp(@Body() auth: AuthSignUpDto) {
+    try {
+      const user = await this.userUseCases.signUpUser({
+        ...auth,
+        mobile: auth.phone || null,
+      });
+      if (user) {
+        const signupData = { message: 'Notification Send to email' };
+        return this.responseService.created(signupData, 'User signup successful');
+      } else {
+        throw new HttpException(
+          this.responseService.badRequest('Could not create new user'),
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    } catch (e) {
+      if (e instanceof HttpException) {
+        throw e;
+      }
+      throw new HttpException(
+        this.responseService.badRequest(e.message),
+        e.status || HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 
-//       const authCheckCookie = this.loginUsecaseProxy.getCookieForAuthCheck();
+  @Post('verify-user')
+  @AllowUnAuthorizedRequest()
+  @UseGuards(VerifyUserGuard)
+  @ApiOperation({ description: 'verify-user' })
+  @SwaggerApiResponse({
+    status: 200,
+    description: 'User verification successful',
+    type: SuccessResponseDto,
+  })
+  @SwaggerApiResponse({
+    status: 400,
+    description: 'Invalid token',
+    type: BadRequestResponseDto,
+  })
+  async verifyUser(@Body() _token: AuthVerifyUserDto, @Req() req) {
+    const user = req.user?.user ?? req.user;
+    if (!user) {
+      return this.responseService.badRequest('User verification failed');
+    }
 
-//       return res.json({
-//         user: user,
-//         authentication: accessTokenCookie,
-//         refresh: refreshTokenCookie,
-//       });
-//     })(req, res, next);
-//   }
+    const accessToken = await this.loginUsecaseProxy.getJwtToken(user.email);
+    const refreshToken = await this.loginUsecaseProxy.getJwtRefreshToken(
+      user.email,
+    );
 
-//   @Post('signup')
-//   @ApiBearerAuth()
-//   @ApiBody({ type: AuthSignUpDto })
-//   @ApiOperation({ description: 'sign up' })
-//   async SignUp(
-//     @Body() auth: AuthSignUpDto,
-//     @Request() req,
-//     @Response() res,
-//     @Next() next,
-//   ) {
-//     return await catchAsync(async (req, res, next) => {
-//       try {
-//         // Step 1: Create the user during signup
-//         const user = await this.userUseCases.createUser({
-//           ...auth,
-//         });
+    req.res.setHeader('Authorization', `Bearer ${accessToken}`);
+    req.res.setHeader('x-refresh-token', refreshToken);
+    
+    const loginData = {
+      ...req.user, 
+      accessToken,
+      refreshToken,
+    };
+    
+    return this.responseService.success(loginData, 'Login successful');
+  }
 
-//         if (user) {
-//           return res.json({
-//             status: 'success',
-//             message: 'Otp is Sent to your email ,please verify your email ',
-//           });
-//         } else {
-//           throw new HttpException(
-//             'Could not create new user',
-//             HttpStatus.BAD_REQUEST,
-//           );
-//         }
-//       } catch (e) {
-//         throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
-//       }
-//     })(req, res, next);
-//   }
-//   @Post('confirm-signup')
-//   @ApiBearerAuth()
-//   @ApiBody({ type: AuthConfirmSignUpDto })
-//   @ApiOperation({ description: 'confirm sign up' })
-//   async ConfirmUserSignUp(
-//     @Body() user: AuthConfirmSignUpDto,
-//     @Request() req,
-//     @Response() res,
-//     @Next() next,
-//   ) {
-//     return await catchAsync(async (req, res, next) => {
-//       const User = await this.userUseCases.createUserOnConfirmation(
-//         user.code,
-//         user.email,
-//       );
-//       if (User) {
-//         // const accessTokenCookie =
-//         //   await this.loginUsecaseProxy.getCookieWithJwtToken(user.email);
-//         // const refreshTokenCookie =
-//         //   await this.loginUsecaseProxy.getCookieWithJwtRefreshToken(user.email);
-//         // req.res.setHeader('Set-Cookie', [
-//         //   accessTokenCookie,
-//         //   refreshTokenCookie,
-//         // ]);
+  @Post('verify-otp')
+  @AllowUnAuthorizedRequest()
+  @ApiOperation({ description: 'verify-otp' })
+  @SwaggerApiResponse({
+    status: 200,
+    description: 'OTP verification successful',
+    type: SuccessResponseDto,
+  })
+  @SwaggerApiResponse({
+    status: 400,
+    description: 'Invalid OTP',
+    type: BadRequestResponseDto,
+  })
+  async getTokenFromCode(@Body() token: AuthVerifyUserDto) {
+    const result = await this.userUseCases.getTokenFromCode(token.token);
+    return this.responseService.success(result, 'OTP verification successful');
+  }
 
-//         // * Give user auth_role or "user" role
-//         await this.authorizationUseCases.createUserRoles(User.id, {
-//           roles: ['user'],
-//         });
+  @Post('forgot-password')
+  @AllowUnAuthorizedRequest()
+  @ApiOperation({ description: 'forgot-password' })
+  @SwaggerApiResponse({
+    status: 200,
+    description: 'Password reset email sent',
+    type: SuccessResponseDto,
+  })
+  @SwaggerApiResponse({
+    status: 400,
+    description: 'Invalid email',
+    type: BadRequestResponseDto,
+  })
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    const result = await this.userUseCases.forgotPassword(forgotPasswordDto.email);
+    return this.responseService.success(result, 'Password reset email sent');
+  }
 
-//         return res.json({
-//           User,
-//         });
-//       } else {
-//         throw new HttpException(
-//           'Could not create new user',
-//           HttpStatus.BAD_REQUEST,
-//         );
-//       }
-//     })(req, res, next);
-//   }
-//   @Post('resend-code-email')
-//   @ApiBearerAuth()
-//   @ApiBody({ type: ResendCodeDto })
-//   @ApiOperation({ description: 'sign up' })
-//   async ResendCode(
-//     @Body() auth: ResendCodeDto,
-//     @Request() req,
-//     @Response() res,
-//     @Next() next,
-//   ) {
-//     return await catchAsync(async (req, res, next) => {
-//       const code = await this.userUseCases.resendCodeEmail(auth.email);
-//       if (code) {
-//         return res.json({
-//           status: 'success',
-//           message: 'Email sent with code for confirmation',
-//         });
-//       } else {
-//         throw new HttpException(
-//           'Could not create new user',
-//           HttpStatus.BAD_REQUEST,
-//         );
-//       }
-//     })(req, res, next);
-//   }
+  @Post('resend-otp')
+  @AllowUnAuthorizedRequest()
+  @ApiOperation({ description: 'resend-otp' })
+  @SwaggerApiResponse({
+    status: 200,
+    description: 'OTP resent successfully',
+    type: SuccessResponseDto,
+  })
+  @SwaggerApiResponse({
+    status: 400,
+    description: 'Invalid email',
+    type: BadRequestResponseDto,
+  })
+  async resendOtp(@Body() resendOtpDto: ResendOtpDto) {
+    const result = await this.userUseCases.resendOtp(resendOtpDto.email);
+    return this.responseService.success(result, 'OTP resent successfully');
+  }
 
-//   @Post('send-phone-otp')
-//   @ApiBearerAuth()
-//   @ApiBody({ type: AuthConfirmPhoneDto })
-//   @ApiOperation({ description: 'confirm sign up' })
-//   async ConfirmUserPhone(
-//     @Body() data: AuthConfirmPhoneDto,
-//     @Request() req,
-//     @Response() res,
-//     @Next() next,
-//   ) {
-//     return await catchAsync(async (req, res, next) => {
-//       const otp = await this.userUseCases.sendPhoneCode(data.phone, data.email);
-//       if (otp) {
-//         return res.json({
-//           status: 'success',
-//           otp: otp,
-//           message: 'Otp sent successfully',
-//         });
-//       } else {
-//         throw new HttpException('Could sent Otp', HttpStatus.BAD_REQUEST);
-//       }
-//     })(req, res, next);
-//   }
+  @Put('set-password/:token')
+  @AllowUnAuthorizedRequest()
+  @SwaggerApiResponse({
+    status: 200,
+    description: 'Password set successfully',
+    type: SuccessResponseDto,
+  })
+  @SwaggerApiResponse({
+    status: 400,
+    description: 'Invalid token or password',
+    type: BadRequestResponseDto,
+  })
+  setEmployeePassword(
+    @Param('token') token: string,
+    @Body() resetPasswordDto: ResetPasswordDto,
+  ) {
+    const result = this.userUseCases.setUserPassword(token, resetPasswordDto.password);
+    return this.responseService.success(result, 'Password set successfully');
+  }
 
-//   @Post('confirm-phone-otp')
-//   @ApiBearerAuth()
-//   @ApiBody({ type: AuthConfirmSignUpDto })
-//   @ApiOperation({ description: 'confirm sign up' })
-//   async ConfirmPhoneSignUp(
-//     @Body() user: AuthConfirmSignUpDto,
-//     @Request() req,
-//     @Response() res,
-//     @Next() next,
-//   ) {
-//     return await catchAsync(async (req, res, next) => {
-//       const User = await this.userUseCases.createPhoneConfirmation(
-//         user.code,
-//         user.email,
-//       );
-//       if (user) {
-//         return res.json({
-//           User,
-//         });
-//       } else {
-//         throw new HttpException('Could not Verify Otp', HttpStatus.BAD_REQUEST);
-//       }
-//     })(req, res, next);
-//   }
+  @Post('initiate-email-update')
+  @AllowUnAuthorizedRequest()
+  @ApiOperation({ description: 'initiate-email-update' })
+  @SwaggerApiResponse({
+    status: 200,
+    description: 'Email update initiated',
+    type: SuccessResponseDto,
+  })
+  @SwaggerApiResponse({
+    status: 400,
+    description: 'Invalid email',
+    type: BadRequestResponseDto,
+  })
+  async initiateEmailUpdate(@Body() body: InitiateEmailUpdateDto) {
+    const result = await this.userUseCases.initiateEmailUpdate(body.email);
+    return this.responseService.success(result, 'Email update initiated');
+  }
 
-//   // @Post('resend-code-phone')
-//   // @ApiBearerAuth()
-//   // @ApiBody({ type: ResendCodeDto })
-//   // @ApiOperation({ description: 'sign up' })
-//   // async ResendCodePhone(
-//   //   @Body() auth: ResendCodeDto,
-//   //   @Request() req,
-//   //   @Response() res,
-//   //   @Next() next,
-//   // ) {
-//   //   return await catchAsync(async (req, res, next) => {
-//   //     const code = await this.userUseCases.resendCodeEmail(auth.email);
-//   //     if (code) {
-//   //       return res.json({
-//   //         status: 'success',
-//   //         message: 'Email sent with code for confirmation',
-//   //       });
-//   //     } else {
-//   //       throw new HttpException(
-//   //         'Could not create new user',
-//   //         HttpStatus.BAD_REQUEST,
-//   //       );
-//   //     }
-//   //   })(req, res, next);
-//   // }
+  @Post('verify-email-update')
+  @AllowUnAuthorizedRequest()
+  @ApiOperation({ description: 'verify-email-update' })
+  @SwaggerApiResponse({
+    status: 200,
+    description: 'Email update verified',
+    type: SuccessResponseDto,
+  })
+  @SwaggerApiResponse({
+    status: 400,
+    description: 'Invalid OTP or email',
+    type: BadRequestResponseDto,
+  })
+  async verifyEmailUpdate(@Body() body: VerifyEmailUpdateDto) {
+    const result = await this.userUseCases.verifyEmailUpdate(body.otp, body.new_email);
+    return this.responseService.success(result, 'Email update verified');
+  }
 
-//   @Post('logout')
-//   @UseGuards(JwtAuthGuard)
-//   @ApiOperation({ description: 'logout' })
-//   async logout(@Request() request: any) {
-//     const cookie = await this.logoutUsecaseProxy.execute();
-//     request.res.setHeader('Set-Cookie', cookie);
-//     const loggedInUser = await this.userUseCases.getUser(
-//       UserData.getUserData().id,
-//       true,
-//     );
+  @Post('logout')
+  @ApiOperation({ description: 'logout' })
+  @SwaggerApiResponse({
+    status: 200,
+    description: 'Logout successful',
+    type: SuccessResponseDto,
+  })
+  async logout(@Request() request: any) {
+    // const cookie = await this.logoutUsecaseProxy.execute();
+    // request.res.setHeader('Set-Cookie', cookie);
+    request.res.setHeader('Authorization', '');
+    request.res.setHeader('x-refresh-token', '');
+    return this.responseService.success(null, 'Logout successful');
+  }
 
-//     return 'Logout successful';
-//   }
+  @Get('is_authenticated')
+  @ApiBearerAuth('authorization')
+  @ApiOperation({ description: 'is_authenticated' })
+  @SwaggerApiResponse({
+    status: 200,
+    description: 'User authentication status',
+    type: SuccessResponseDto,
+  })
+  @SwaggerApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+    type: UnauthorizedResponseDto,
+  })
+  async isAuthenticated(@Req() request: any) {
+    const user = await this.isAuthUsecaseProxy.execute(request.user.email);
+    const response = new IsAuthPresenter();
+    response.email = user.email;
+    return this.responseService.success(response, 'User authentication status retrieved');
+  }
 
-//   // @Post('google')
-//   // // @UseGuards(GoogleAuthGuard)
-//   // @ApiOperation({ description: 'google' })
-//   // async signInWithgoogle(@Body('credentialToken') credentialToken: string) {
-//   //   return await this.loginUsecaseProxy.signInWithGoogle(credentialToken);
-//   // }
+  @Post('is_authenticated')
+  @ApiBearerAuth('authorization')
+  @ApiOperation({ description: 'is_authenticated' })
+  @SwaggerApiResponse({
+    status: 200,
+    description: 'User authentication status',
+    type: SuccessResponseDto,
+  })
+  @SwaggerApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+    type: UnauthorizedResponseDto,
+  })
+  async isAuthenticatedRequest(@Req() request: any) {
+    const user = await this.isAuthUsecaseProxy.execute(request.user.email);
+    const response = new IsAuthPresenter();
+    response.email = user.email;
+    return this.responseService.success(response, 'User authentication status retrieved');
+  }
 
-//   @Get('is_authenticated')
-//   @ApiBearerAuth()
-//   @UseGuards(JwtAuthGuard)
-//   @ApiOperation({ description: 'is_authenticated' })
-//   @ApiResponseType(IsAuthPresenter, false)
-//   async isAuthenticated(@Req() request: any) {
-//     const user = await this.isAuthUsecaseProxy.execute(request.user.email);
-//     const response = new IsAuthPresenter();
-//     response.email = user.email;
-//     return response;
-//   }
+  @Patch('update-password')
+  @ApiBearerAuth('authorization')
+  @ApiOperation({ description: 'password update' })
+  @SwaggerApiResponse({
+    status: 200,
+    description: 'Password updated successfully',
+    type: SuccessResponseDto,
+  })
+  @SwaggerApiResponse({
+    status: 400,
+    description: 'Invalid current password',
+    type: BadRequestResponseDto,
+  })
+  async updatePassword(@Body() body: UpdatePasswordDto) {
+    const result = await this.loginUsecaseProxy.updatePassword(
+      body.password,
+      body.new_password,
+    );
+    return this.responseService.success(result, 'Password updated successfully');
+  }
 
-//   @Post('is_authenticated')
-//   @ApiBearerAuth()
-//   @UseGuards(JwtAuthGuard)
-//   @ApiOperation({ description: 'is_authenticated' })
-//   @ApiResponseType(IsAuthPresenter, false)
-//   async isAuthenticatedRequest(@Req() request: any) {
-//     const user = await this.isAuthUsecaseProxy.execute(request.user.email);
-//     const response = new IsAuthPresenter();
-//     response.email = user.email;
-//     return response;
-//   }
-
-//   @Post('forgot-password')
-//   @ApiOperation({ description: 'forgot-password' })
-//   async forgotPassword(
-//     @Body() forgotDto: ForgotPasswordDto,
-//     @Request() req,
-//     @Response() res,
-//     @Next() next,
-//   ) {
-//     return await catchAsync(async (req, res, next) => {
-//       let str = await this.userUseCases.forgotPassword(forgotDto.email);
-//       return res.json({
-//         message: str,
-//       });
-//     })(req, res, next);
-//   }
-//   @Put('set-password/:code')
-//   async setPassword(
-//     @Param('code', ParseIntPipe) code: number,
-//     @Body() body: SetPasswordDto,
-//     @Request() req,
-//     @Response() res,
-//     @Next() next,
-//   ) {
-//     return await catchAsync(async (req, res, next) => {
-//       const result = await this.userUseCases.setUsersPassword(
-//         code,
-//         body.password,
-//       );
-//       if (result) {
-//         return res.json({
-//           status: 'success',
-//           message: 'Password Updated successfully',
-//         });
-//       } else {
-//         throw new HttpException(
-//           'Could not Set Password. Please try again',
-//           HttpStatus.BAD_REQUEST,
-//         );
-//       }
-//     })(req, res, next);
-//   }
-
-//   @Patch('reset-password/:code')
-//   async resetPassword(
-//     @Body() body: ResetPasswordDto,
-//     @Param('code') code: string,
-//     @Request() req,
-//     @Response() res,
-//     @Next() next,
-//   ) {
-//     return await catchAsync(async (req, res, next) => {
-//       const userEmail = await this.userUseCases.getUserEmailByCode(code);
-
-//       // Get user by email
-//       const user = await this.userUseCases.getUserByEmail(userEmail);
-
-//       // * Update the password
-//       const updatedUser = await this.userUseCases.updateUser(user.id, {
-//         password: body.password,
-//       });
-
-//       return res.json(updatedUser);
-//     })(req, res, next);
-//   }
-
-//   @UseGuards(JwtAuthGuard)
-//   @Patch('update-password')
-//   async updatePassword(
-//     @Body() user: UpdatePasswordDto,
-//     @Request() req,
-//     @Response() res,
-//     @Next() next,
-//   ) {
-//     return await catchAsync(async (req, res, next) => {
-//       // * Get the logged in user
-//       const loggedInUser = await this.userUseCases.getUser(
-//         UserData.getUserData().id,
-//         true,
-//       );
-
-//       console.log('loggedInUser :>> ', loggedInUser);
-//       const match = await this.bcryptService.compare(
-//         user.currentPassword,
-//         loggedInUser.password,
-//       );
-
-//       if (!match) throw new UnauthorizedException('Invalid password match');
-
-//       // * Update the password
-//       const updatedUser = await this.userUseCases.updateUser(loggedInUser.id, {
-//         password: user.newPassword,
-//       });
-
-//       return res.json(updatedUser);
-//     })(req, res, next);
-//   }
-
-//   @UseGuards(JwtAuthGuard)
-//   @Post('validate-password')
-//   async validatePassword(
-//     @Body() body: ValidatePasswordDto,
-//     @Request() req,
-//     @Response() res,
-//     @Next() next,
-//   ) {
-//     return await catchAsync(async (req, res, next) => {
-//       const loggedInUser = await this.userUseCases.getUser(
-//         UserData.getUserData().id,
-//         true,
-//       );
-
-//       const isPasswordValid = await this.bcryptService.compare(
-//         body.password,
-//         loggedInUser.password,
-//       );
-
-//       if (!isPasswordValid) throw new UnauthorizedException('Invalid password');
-
-//       return res.json({ isPasswordValid });
-//     })(req, res, next);
-//   }
-
-//   @Put('validate-code/:code')
-//   async validateCode(
-//     @Param('code') code: string,
-//     @Request() req,
-//     @Response() res,
-//     @Next() next,
-//   ) {
-//     return await catchAsync(async (req, res, next) => {
-//       const str = await this.userUseCases.validateCode(code);
-//       res.json(str);
-//     })(req, res, next);
-//   }
-
-//   randomIntFromInterval(min, max) {
-//     // min and max included
-//     return Math.floor(Math.random() * (max - min + 1) + min);
-//   }
-
-//   // @Post('email-2fa')
-//   // @UseGuards(JwtAuthGuard)
-//   // async sendEmail2FA(@Request() req, @Response() res, @Next() next) {
-//   //   return await catchAsync(async (req, res, next) => {
-//   //     const loggedInUser = await this.userUseCases.getUser(
-//   //       UserData.getUserData().id,
-//   //       true,
-//   //     );
-
-//   //     // * Send email 2FA
-//   //     const code = this.randomIntFromInterval(1000, 9999);
-
-//   //     // * Save the code in the database
-//   //     await this.userUseCases.updateUser(loggedInUser.id, {
-//   //       code_2fa: code,
-//   //     });
-
-//   //     const email2FA = await this.emailService.sendEmail2FA(
-//   //       loggedInUser.email,
-//   //       code,
-//   //     );
-
-//   //     if (!email2FA) {
-//   //       throw new HttpException('Could not send email', HttpStatus.BAD_REQUEST);
-//   //     }
-
-//   //     return res.json({
-//   //       status: 'success',
-//   //       message: 'Email sent with code for confirmation',
-//   //     });
-//   //     // return this.userUseCases.sendEmail2FA(loggedInUser.email, body.email);
-//   //   })(req, res, next);
-//   // }
-
-//   // @Get('email-2fa/:code')
-//   // @UseGuards(JwtAuthGuard)
-//   // async getEmail2FA(
-//   //   @Param('code', ParseIntPipe) code: number,
-//   //   @Request() req,
-//   //   @Response() res,
-//   //   @Next() next,
-//   // ) {
-//   //   return await catchAsync(async (req, res, next) => {
-//   //     const loggedInUser = await this.userUseCases.getUser(
-//   //       UserData.getUserData().id,
-//   //       true,
-//   //     );
-
-//   //     // * Check if the code is valid
-//   //     if (code != loggedInUser.code_2fa)
-//   //       throw new HttpException('Invalid code', HttpStatus.BAD_REQUEST);
-
-//   //     // * Update the user
-//   //     await this.userUseCases.updateUser(loggedInUser.id, {
-//   //       code_2fa: null,
-//   //     });
-
-//   //     return res.json({
-//   //       status: 'success',
-//   //       message: '2FA confirmed',
-//   //     });
-
-//   //     // return this.userUseCases.sendEmail2FA(loggedInUser.email, body.email);
-//   //   })(req, res, next);
-//   // }
-
-//   @Get('refresh')
-//   @UseGuards(JwtRefreshGuard)
-//   @ApiBearerAuth()
-//   async refresh(@Req() request: any) {
-//     const accessTokenCookie =
-//       await this.loginUsecaseProxy.getCookieWithJwtToken(request.user.email);
-//     request.res.setHeader('Set-Cookie', accessTokenCookie);
-//     return 'Refresh successful';
-//   }
-// }
+  @Get('refresh')
+  @AllowUnAuthorizedRequest()
+  @UseGuards(JwtRefreshGuard)
+  @ApiBearerAuth('authorization')
+  @SwaggerApiResponse({
+    status: 200,
+    description: 'Token refreshed successfully',
+    type: SuccessResponseDto,
+  })
+  @SwaggerApiResponse({
+    status: 401,
+    description: 'Invalid refresh token',
+    type: UnauthorizedResponseDto,
+  })
+  async refresh(@Req() request: any) {
+    const accessToken = await this.loginUsecaseProxy.getJwtToken(
+      request.user.email,
+    );
+    const refreshToken = await this.loginUsecaseProxy.getJwtRefreshToken(
+      request.user.email,
+    );
+    request.res.setHeader('Authorization', `Bearer ${accessToken}`);
+    request.res.setHeader('x-refresh-token', refreshToken);
+    return this.responseService.success(
+      { accessToken, refreshToken },
+      'Token refreshed successfully',
+    );
+  }
+}
